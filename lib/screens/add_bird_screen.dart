@@ -54,7 +54,15 @@ class _AddBirdScreenState extends State<AddBirdScreen> {
     final s = await Navigator.of(context).push<Species>(
       MaterialPageRoute(builder: (_) => SpeciesPickerScreen(appState: widget.appState)),
     );
-    if (s != null) setState(() => _species = s);
+    if (s != null) {
+      setState(() {
+        if (_species?.sci != s.sci) {
+          _fatherRing = null;
+          _motherRing = null;
+        }
+        _species = s;
+      });
+    }
   }
 
   Future<void> _pickPhoto() async {

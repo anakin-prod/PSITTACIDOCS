@@ -55,9 +55,9 @@ class StatsScreen extends StatelessWidget {
               height: 10,
               child: Row(
                 children: [
-                  if (sexM > 0) Expanded(flex: (pct(sexM) * 1000).round(), child: Container(color: const Color(0xFF1F4BA8))),
-                  if (sexF > 0) Expanded(flex: (pct(sexF) * 1000).round(), child: Container(color: const Color(0xFFB5646E))),
-                  if (sexU > 0) Expanded(flex: (pct(sexU) * 1000).round(), child: Container(color: const Color(0xFFE6CFCC))),
+                  if (sexM > 0) Expanded(flex: sexM, child: Container(color: const Color(0xFF1F4BA8))),
+                  if (sexF > 0) Expanded(flex: sexF, child: Container(color: const Color(0xFFB5646E))),
+                  if (sexU > 0) Expanded(flex: sexU, child: Container(color: const Color(0xFFE6CFCC))),
                   if (total == 0) Expanded(child: Container(color: AppColors.line)),
                 ],
               ),

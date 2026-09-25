@@ -17,12 +17,20 @@ class MoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? genoDefault;
+    // Ouvre la généalogie du premier oiseau ayant des parents connus (à
+    // défaut, du premier oiseau). La bague est copiée dans une variable non
+    // nullable avant d'être capturée par la fonction, comme l'exige Dart.
+    VoidCallback? openGenealogy;
     if (appState.birds.isNotEmpty) {
       final withParents = appState.birds.where((b) => b.hasParents);
-      genoDefault = withParents.isNotEmpty
+      final String ring = withParents.isNotEmpty
           ? withParents.first.ring
           : appState.birds.first.ring;
+      openGenealogy = () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => GenealogyScreen(appState: appState, ring: ring),
+        ),
+      );
     }
 
     return SafeArea(
@@ -45,13 +53,7 @@ class MoreScreen extends StatelessWidget {
             title: 'Généalogie',
             subtitle: 'Arbres familiaux',
             trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
-            onTap: genoDefault == null
-                ? null
-                : () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => GenealogyScreen(appState: appState, ring: genoDefault),
-                    ),
-                  ),
+            onTap: openGenealogy,
           ),
           InfoCard(
             leading: _menuIcon('out'),

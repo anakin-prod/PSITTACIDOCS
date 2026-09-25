@@ -48,7 +48,7 @@ class _EditBirdScreenState extends State<EditBirdScreen> {
     _ringType = bird.ringType.isEmpty ? 'Fermée' : bird.ringType;
     _sex = bird.sex;
     _status = bird.status;
-    _location = bird.location.isEmpty ? null : bird.location;
+    _location = widget.appState.settings.volieres.contains(bird.location) ? bird.location : null;
     _born = bird.born.isEmpty ? null : DateTime.tryParse(bird.born);
     _photoPath = bird.photoPath;
   }
