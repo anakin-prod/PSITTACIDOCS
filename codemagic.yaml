@@ -1,0 +1,40 @@
+workflows:
+  android-release:
+    name: Psittacidocs — Android
+    max_build_duration: 60
+    instance_type: linux_x2
+    environment:
+      flutter: stable
+      groups:
+        # Créez ce groupe de variables dans Codemagic (Teams > Variables) si vous
+        # voulez publier automatiquement sur Google Play. Sinon, laissez vide :
+        # le build produira quand même un .apk / .aab téléchargeable.
+        - google_play
+    scripts:
+      - name: Générer les dossiers de plateforme (Android/iOS)
+        script: |
+          # Ce projet ne contient volontairement pas les dossiers android/ et ios/,
+          # car leur contenu (Gradle, Xcode) est très sensible à la version de
+          # Flutter utilisée pour les générer. `flutter create .` les régénère
+          # ici avec la version exacte de Flutter de cette machine de build, sans
+          # toucher au code Dart existant (lib/, pubspec.yaml, assets/).
+          flutter create . --platforms=android,ios --org com.psittacidocs --project-name psittacidocs
+      - name: Installer les dépendances
+        script: flutter pub get
+      - name: Générer les icônes d'appli
+        script: dart run flutter_launcher_icons
+      - name: Compiler l'App Bundle Android
+        script: flutter build appbundle --release
+    artifacts:
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/*.apk
+    publishing:
+      email:
+        recipients:
+          - votre-email@exemple.com
+      # Décommentez ce bloc une fois le compte de service Google Play configuré
+      # dans Codemagic (groupe de variables "google_play"), pour publier
+      # automatiquement à chaque build sur la piste interne.
+      # google_play:
+      #   credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+      #   track: internal
