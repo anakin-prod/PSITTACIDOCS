@@ -2,14 +2,15 @@ workflows:
   android-release:
     name: Psittacidocs — Android
     max_build_duration: 60
-    instance_type: linux_x2
+    # mac_mini_m2 est la seule machine disponible sur un compte Codemagic
+    # personnel gratuit (500 min/mois). Elle compile aussi très bien Android.
+    instance_type: mac_mini_m2
     environment:
       flutter: stable
-      groups:
-        # Créez ce groupe de variables dans Codemagic (Teams > Variables) si vous
-        # voulez publier automatiquement sur Google Play. Sinon, laissez vide :
-        # le build produira quand même un .apk / .aab téléchargeable.
-        - google_play
+      # Pour publier automatiquement sur Google Play plus tard : créez un groupe
+      # de variables "google_play" dans Codemagic, puis décommentez ces lignes.
+      # groups:
+      #   - google_play
     scripts:
       - name: Générer les dossiers de plateforme (Android/iOS)
         script: |
@@ -28,13 +29,11 @@ workflows:
     artifacts:
       - build/**/outputs/**/*.aab
       - build/**/outputs/**/*.apk
-    publishing:
-      email:
-        recipients:
-          - votre-email@exemple.com
-      # Décommentez ce bloc une fois le compte de service Google Play configuré
-      # dans Codemagic (groupe de variables "google_play"), pour publier
-      # automatiquement à chaque build sur la piste interne.
-      # google_play:
-      #   credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-      #   track: internal
+    # Pour recevoir un e-mail à chaque build, décommentez et mettez votre adresse.
+    # publishing:
+    #   email:
+    #     recipients:
+    #       - votre-email@exemple.com
+    #   google_play:
+    #     credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+    #     track: internal
