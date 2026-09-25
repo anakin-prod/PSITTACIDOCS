@@ -1,39 +1,123 @@
+# Trois workflows, à lancer à la main depuis Codemagic (bouton « Start new build »).
+#
+#   1 · Build de test       → un .apk à installer directement sur un téléphone.
+#   2 · Build Google Play    → un .aab signé avec ta clé, à envoyer sur Google Play.
+#   3 · Générer la clé       → à lancer UNE SEULE FOIS, avant le premier build Google Play.
+#
+# Tous utilisent mac_mini_m2 : c'est la seule machine du compte gratuit
+# (500 min/mois), et elle compile très bien Android.
+
 workflows:
-  android-release:
-    name: Psittacidocs — Android
-    max_build_duration: 60
-    # mac_mini_m2 est la seule machine disponible sur un compte Codemagic
-    # personnel gratuit (500 min/mois). Elle compile aussi très bien Android.
+  test-build:
+    name: 1 · Build de test (APK à installer)
     instance_type: mac_mini_m2
+    max_build_duration: 60
     environment:
       flutter: stable
-      # Pour publier automatiquement sur Google Play plus tard : créez un groupe
-      # de variables "google_play" dans Codemagic, puis décommentez ces lignes.
-      # groups:
-      #   - google_play
     scripts:
-      - name: Générer les dossiers de plateforme (Android/iOS)
+      - name: Préparer le projet
+        script: bash scripts/prepare_android.sh
+      - name: Compiler l'APK de test
         script: |
-          # Ce projet ne contient volontairement pas les dossiers android/ et ios/,
-          # car leur contenu (Gradle, Xcode) est très sensible à la version de
-          # Flutter utilisée pour les générer. `flutter create .` les régénère
-          # ici avec la version exacte de Flutter de cette machine de build, sans
-          # toucher au code Dart existant (lib/, pubspec.yaml, assets/).
-          flutter create . --platforms=android,ios --org com.psittacidocs --project-name psittacidocs
-      - name: Installer les dépendances
-        script: flutter pub get
-      - name: Générer les icônes d'appli
-        script: dart run flutter_launcher_icons
-      - name: Compiler l'App Bundle Android
-        script: flutter build appbundle --release
+          # Signé avec la clé de débogage : s'installe directement sur un
+          # téléphone Android, mais n'est pas accepté par Google Play.
+          flutter build apk --release --build-number=$BUILD_NUMBER
+          mkdir -p livrable
+          cp build/app/outputs/flutter-apk/app-release.apk "livrable/psittacidocs-test-$BUILD_NUMBER.apk"
     artifacts:
-      - build/**/outputs/**/*.aab
-      - build/**/outputs/**/*.apk
-    # Pour recevoir un e-mail à chaque build, décommentez et mettez votre adresse.
+      - livrable/*.apk
+
+  play-release:
+    name: 2 · Build Google Play (AAB signé)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      android_signing:
+        # Nom de référence à donner à la clé lors de son envoi dans Codemagic
+        # (Team settings → codemagic.yaml settings → Code signing identities
+        # → Android keystores → Reference name).
+        - psittacidocs_upload
+    scripts:
+      - name: Vérifier la clé de signature
+        script: |
+          if [ -z "${CM_KEYSTORE_PATH:-}" ] || [ ! -f "$CM_KEYSTORE_PATH" ]; then
+            echo "Aucune clé de signature reçue. Envoie d'abord la clé dans Codemagic"
+            echo "avec le nom de référence « psittacidocs_upload » (voir README.md)."
+            exit 1
+          fi
+          echo "Clé de signature reçue (alias : $CM_KEY_ALIAS)."
+      - name: Préparer le projet
+        script: bash scripts/prepare_android.sh
+      - name: Compiler l'App Bundle signé
+        script: |
+          # Le numéro de build (versionCode) augmente à chaque build : Google Play
+          # refuse deux envois avec le même numéro.
+          flutter build appbundle --release --build-number=$BUILD_NUMBER
+      - name: Contrôler la signature
+        script: |
+          AAB=build/app/outputs/bundle/release/app-release.aab
+          CERT=$(keytool -printcert -jarfile "$AAB" 2>&1 || true)
+          if echo "$CERT" | grep -q "Android Debug"; then
+            echo "Le fichier est signé avec la clé de débogage : Google Play le refuserait."
+            exit 1
+          fi
+          if ! echo "$CERT" | grep -q "Owner:"; then
+            echo "Le fichier n'est pas signé."
+            exit 1
+          fi
+          echo "Signature correcte :"
+          echo "$CERT" | grep -m1 "Owner:"
+          mkdir -p livrable
+          cp "$AAB" "livrable/psittacidocs-play-$BUILD_NUMBER.aab"
+    artifacts:
+      - livrable/*.aab
+    # Publication automatique sur Google Play (facultatif, plus tard) : le tout
+    # premier .aab doit de toute façon être envoyé à la main dans la Play Console.
+    # Ensuite, crée un groupe de variables « google_play » contenant
+    # GCLOUD_SERVICE_ACCOUNT_CREDENTIALS, ajoute « groups: [google_play] » dans
+    # environment, et décommente ce bloc :
     # publishing:
-    #   email:
-    #     recipients:
-    #       - votre-email@exemple.com
     #   google_play:
     #     credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
     #     track: internal
+
+  generate-keystore:
+    name: 3 · Générer la clé de signature (une seule fois)
+    instance_type: mac_mini_m2
+    max_build_duration: 10
+    scripts:
+      - name: Générer la clé
+        script: |
+          set -euo pipefail
+          OUT=cle_signature
+          mkdir -p "$OUT"
+          KEYTOOL=$(command -v keytool || echo "$JAVA_HOME/bin/keytool")
+          # Mot de passe aléatoire, jamais affiché dans le journal du build :
+          # il est écrit uniquement dans le fichier d'identifiants téléchargeable.
+          PASS=$(openssl rand -hex 16)
+          ALIAS=upload
+          "$KEYTOOL" -genkeypair \
+            -keystore "$OUT/psittacidocs-upload.jks" -storetype JKS \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -alias "$ALIAS" -storepass "$PASS" -keypass "$PASS" \
+            -dname "CN=Psittacidocs, O=Psittacidocs, C=FR" > /dev/null 2>&1
+          SHA1=$("$KEYTOOL" -list -v -keystore "$OUT/psittacidocs-upload.jks" -storepass "$PASS" -alias "$ALIAS" 2>/dev/null | grep -m1 "SHA1:" | sed 's/.*SHA1: *//')
+          cat > "$OUT/IDENTIFIANTS_CLE_A_CONSERVER.txt" <<EOF
+          Clé de signature Google Play (clé d'importation) — Psittacidocs
+          Générée le : $(date -u +"%d/%m/%Y")
+
+          Fichier            : psittacidocs-upload.jks
+          Keystore password  : $PASS
+          Key alias          : $ALIAS
+          Key password       : $PASS
+          Empreinte SHA-1    : $SHA1
+
+          À conserver précieusement (gestionnaire de mots de passe + sauvegarde).
+          Toutes les mises à jour de l'appli sur Google Play devront être signées
+          avec cette même clé.
+          EOF
+          echo "Clé générée (empreinte SHA-1 : $SHA1)."
+          echo "Télécharge les deux fichiers dans l'onglet Artifacts de ce build."
+    artifacts:
+      - cle_signature/*

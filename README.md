@@ -16,29 +16,56 @@ automatiquement par Flutter et sont très sensibles à la version exacte de
 Flutter utilisée. Les régénérer à la main sans pouvoir compiler pour vérifier
 aurait été plus risqué que de laisser l'outil officiel s'en charger.
 
-**`codemagic.yaml` le fait automatiquement à chaque build** (première étape :
-`flutter create .`), donc si vous passez par Codemagic, vous n'avez rien à
-faire de plus. Pour les générer vous-même en local :
+**Chaque build Codemagic les recrée automatiquement** via
+`scripts/prepare_android.sh`, qui applique aussi la configuration de signature
+et le nom affiché de l'appli (`scripts/patch_android.py`). Pour faire la même
+chose en local :
 
 ```bash
-flutter create . --platforms=android,ios --org com.psittacidocs --project-name psittacidocs
-flutter pub get
-dart run flutter_launcher_icons   # applique les icônes du dossier assets/images
+bash scripts/prepare_android.sh
 flutter run                       # ou : flutter build apk / flutter build appbundle
 ```
 
-## Mise en ligne via GitHub + Codemagic
+## Les trois builds Codemagic
 
-1. Poussez ce dossier tel quel sur un nouveau dépôt GitHub.
-2. Sur [codemagic.io](https://codemagic.io), connectez ce dépôt : le fichier
-   `codemagic.yaml` déjà présent configure tout le pipeline (génération des
-   plateformes, dépendances, icônes, build de l'App Bundle Android).
-3. Le premier build produit un fichier `.aab` téléchargeable, prêt à envoyer
-   manuellement sur la Google Play Console.
-4. Pour une publication automatique à chaque build, ajoutez vos identifiants
-   de compte de service Google Play dans Codemagic (Teams → Variables →
-   groupe `google_play`), puis décommentez le bloc `google_play:` en bas de
-   `codemagic.yaml`.
+Le fichier `codemagic.yaml` définit trois workflows, à lancer à la main depuis
+Codemagic (**Start new build**, puis choix du workflow) :
+
+| Workflow | Résultat | Quand l'utiliser |
+| --- | --- | --- |
+| **1 · Build de test** | `psittacidocs-test-N.apk` | Pour installer l'appli sur ton téléphone et la tester. Signé avec une clé de test : refusé par Google Play. |
+| **2 · Build Google Play** | `psittacidocs-play-N.aab` | Pour publier sur Google Play. Signé avec ta propre clé. |
+| **3 · Générer la clé** | `psittacidocs-upload.jks` + `IDENTIFIANTS_CLE_A_CONSERVER.txt` | **Une seule fois**, avant le premier build Google Play. |
+
+Les fichiers produits se téléchargent dans l'onglet **Artifacts** du build.
+
+### Mise en place de la clé (une seule fois)
+
+1. Lance le workflow **3 · Générer la clé de signature** et télécharge les deux
+   fichiers produits. Conserve-les précieusement (sauvegarde + gestionnaire de
+   mots de passe) : toutes les futures mises à jour devront être signées avec
+   cette même clé, et Codemagic ne permet pas de la re-télécharger.
+2. Dans Codemagic : **Team settings → codemagic.yaml settings → Code signing
+   identities → Android keystores**. Envoie `psittacidocs-upload.jks` et
+   recopie les valeurs du fichier d'identifiants (Keystore password, Key alias,
+   Key password). Dans **Reference name**, écris exactement :
+   `psittacidocs_upload`.
+3. Lance le workflow **2 · Build Google Play** : il vérifie qu'il reçoit bien la
+   clé, compile, puis contrôle que le fichier n'est pas signé avec une clé de
+   test avant de le livrer.
+
+Ne relance pas le workflow 3 ensuite : il créerait une nouvelle clé, différente.
+
+### Premier envoi sur Google Play
+
+Le tout premier `.aab` doit être envoyé à la main dans la Google Play Console
+(création de l'appli, puis piste de test interne). Google Play gère ensuite la
+signature finale (« Play App Signing ») ; ta clé sert de clé d'importation.
+Le numéro de build augmente automatiquement à chaque build, ce qu'exige
+Google Play.
+
+Identifiant de l'application : `app.psittacidocs`. Il devient
+**définitif** dès le premier envoi sur Google Play.
 
 ## Structure du projet
 
