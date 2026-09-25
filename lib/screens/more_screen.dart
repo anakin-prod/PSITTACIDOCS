@@ -6,7 +6,11 @@ import '../widgets/app_icons.dart';
 import '../widgets/common.dart';
 import 'cessions_screen.dart';
 import 'documents_screen.dart';
+import 'env_readings_screen.dart';
+import 'facts_screen.dart';
 import 'genealogy_screen.dart';
+import 'genetics_screen.dart';
+import 'incubations_screen.dart';
 import 'settings_screen.dart';
 import 'species_screen.dart';
 import 'stats_screen.dart';
@@ -63,6 +67,42 @@ class MoreScreen extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => CessionsScreen(appState: appState)),
+            ),
+          ),
+          InfoCard(
+            leading: _menuIcon('idea'),
+            title: 'Le saviez-vous ?',
+            subtitle: '${appState.facts.length} informations sourcées sur les perroquets',
+            trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => FactsScreen(appState: appState)),
+            ),
+          ),
+          InfoCard(
+            leading: _menuIcon('thermo'),
+            title: 'Conditions des volières',
+            subtitle: 'Température, humidité, éclairage',
+            trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => EnvReadingsScreen(appState: appState)),
+            ),
+          ),
+          InfoCard(
+            leading: _menuIcon('egg'),
+            title: 'Incubation',
+            subtitle: '${appState.incubations.where((i) => i.isActive).length} en cours',
+            trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => IncubationsScreen(appState: appState)),
+            ),
+          ),
+          InfoCard(
+            leading: _menuIcon('genetics'),
+            title: 'Calculateur génétique',
+            subtitle: 'Mutations possibles chez les jeunes',
+            trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const GeneticsScreen()),
             ),
           ),
           InfoCard(

@@ -5,20 +5,29 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 
+import '../logic/inbreeding.dart';
 import '../models/agenda_event.dart';
 import '../models/app_notification.dart';
 import '../models/bird.dart';
 import '../models/bird_document.dart';
+import '../models/breeding.dart';
 import '../models/couple.dart';
 import '../models/settings.dart';
 import '../models/species.dart';
+import '../models/parrot_fact.dart';
 
 /// Le résultat d'un contrôle de compatibilité entre deux oiseaux avant de
 /// former un couple.
 class CompatInfo {
   final List<String> blocking;
   final List<String> warnings;
-  const CompatInfo({this.blocking = const [], this.warnings = const []});
+  /// Consanguinité attendue des jeunes du couple (0 à 1).
+  final double offspringInbreeding;
+  const CompatInfo({
+    this.blocking = const [],
+    this.warnings = const [],
+    this.offspringInbreeding = 0,
+  });
   bool get hasBlocking => blocking.isNotEmpty;
   bool get hasWarnings => warnings.isNotEmpty;
 }
@@ -33,6 +42,7 @@ class AgendaItem {
   final bool auto;
   final String? deleteId; // id de l'AgendaEvent si supprimable
   final String? birdRing; // pour naviguer vers la fiche si auto
+  final String? incubationId; // pour naviguer vers l'incubation si auto
 
   AgendaItem({
     required this.date,
@@ -42,6 +52,7 @@ class AgendaItem {
     required this.auto,
     this.deleteId,
     this.birdRing,
+    this.incubationId,
   });
 }
 
@@ -56,10 +67,16 @@ class AppState extends ChangeNotifier {
   List<AgendaEvent> events = [];
   List<AppNotification> notifications = [];
   Settings settings = Settings();
+  List<EnvReading> envReadings = [];
+  List<Incubation> incubations = [];
+  List<ParrotFact> facts = [];
   int _seq = 1000;
 
   bool _loaded = false;
   bool get loaded => _loaded;
+
+  /// Informations « Le saviez-vous ? » concernant une espèce.
+  List<ParrotFact> factsFor(String sci) => facts.where((f) => f.sci == sci).toList();
 
   Species? speciesBySci(String sci) {
     for (final s in species) {
@@ -101,6 +118,16 @@ class AppState extends ChangeNotifier {
         .map((e) => Species.fromJson(e as Map<String, dynamic>))
         .toList();
 
+    try {
+      final factsRaw = await rootBundle.loadString('assets/data/parrot_facts.json');
+      facts = (jsonDecode(factsRaw) as List<dynamic>)
+          .map((e) => ParrotFact.fromJson(e as Map<String, dynamic>))
+          .where((f) => f.isValid)
+          .toList();
+    } catch (_) {
+      facts = [];
+    }
+
     final file = await _dataFile();
     if (await file.exists()) {
       try {
@@ -120,6 +147,12 @@ class AppState extends ChangeNotifier {
         settings = data['settings'] == null
             ? Settings()
             : Settings.fromJson(data['settings'] as Map<String, dynamic>);
+        envReadings = (data['envReadings'] as List<dynamic>? ?? [])
+            .map((e) => EnvReading.fromJson(e as Map<String, dynamic>))
+            .toList();
+        incubations = (data['incubations'] as List<dynamic>? ?? [])
+            .map((e) => Incubation.fromJson(e as Map<String, dynamic>))
+            .toList();
         _seq = data['seq'] as int? ?? 1000;
       } catch (_) {
         _seedDemoData();
@@ -139,6 +172,8 @@ class AppState extends ChangeNotifier {
       'events': events.map((e) => e.toJson()).toList(),
       'notifications': notifications.map((e) => e.toJson()).toList(),
       'settings': settings.toJson(),
+      'envReadings': envReadings.map((e) => e.toJson()).toList(),
+      'incubations': incubations.map((e) => e.toJson()).toList(),
       'seq': _seq,
     };
     await file.writeAsString(jsonEncode(data));
@@ -347,6 +382,27 @@ class AppState extends ChangeNotifier {
   Set<String> get pairedRings =>
       couples.expand((c) => [c.maleRing, c.femaleRing]).whereType<String>().toSet();
 
+  // ---------------------------------------------------------------------
+  // Consanguinité
+  // ---------------------------------------------------------------------
+
+  /// Calculateur construit sur la généalogie actuelle. Les parents sont
+  /// identifiés par leur bague, même s'ils ne sont pas enregistrés dans
+  /// l'appli : deux oiseaux ayant la même bague de père sont bien reconnus
+  /// comme demi-frères.
+  InbreedingCalculator _inbreedingCalculator() => InbreedingCalculator(
+    sireOf: (ring) => findBird(ring)?.fatherRing,
+    damOf: (ring) => findBird(ring)?.motherRing,
+  );
+
+  /// Consanguinité d'un oiseau (0 à 1), calculée sur ses ancêtres connus.
+  double inbreedingOf(Bird bird) =>
+      _inbreedingCalculator().kinship(bird.fatherRing, bird.motherRing);
+
+  /// Consanguinité attendue des jeunes d'un couple (0 à 1).
+  double offspringInbreeding(String? maleRing, String? femaleRing) =>
+      _inbreedingCalculator().kinship(maleRing, femaleRing);
+
   CompatInfo compatInfo(String? maleRing, String? femaleRing) {
     if (maleRing == null || femaleRing == null) return const CompatInfo();
     final m = findBird(maleRing);
@@ -374,14 +430,13 @@ class AppState extends ChangeNotifier {
         f.motherRing == maleRing;
     if (directRelation) {
       blocking.add('L’un des oiseaux est un parent direct de l’autre.');
-    } else {
-      final sharedParent = (m.fatherRing != null && m.fatherRing == f.fatherRing) ||
-          (m.motherRing != null && m.motherRing == f.motherRing) ||
-          (m.fatherRing != null && m.fatherRing == f.motherRing) ||
-          (m.motherRing != null && m.motherRing == f.fatherRing);
-      if (sharedParent) {
-        warnings.add('Ces deux oiseaux partagent un parent commun (risque de consanguinité).');
-      }
+    }
+
+    final coi = offspringInbreeding(maleRing, femaleRing);
+    if (!directRelation && coi >= kInbreedingWarningThreshold) {
+      warnings.add(
+        'Consanguinité des futurs jeunes : ${formatPercent(coi)}. ${inbreedingLevel(coi)}.',
+      );
     }
 
     if (m.sci != f.sci) {
@@ -390,7 +445,7 @@ class AppState extends ChangeNotifier {
       warnings.add('Espèces différentes : $ml et $fl.');
     }
 
-    return CompatInfo(blocking: blocking, warnings: warnings);
+    return CompatInfo(blocking: blocking, warnings: warnings, offspringInbreeding: coi);
   }
 
   Future<Couple> formCouple(String maleRing, String femaleRing) async {
@@ -504,6 +559,16 @@ class AppState extends ChangeNotifier {
         ));
       }
     }
+    for (final inc in incubations.where((i) => i.isActive && i.incubationDays > 0)) {
+      items.add(AgendaItem(
+        date: inc.expectedHatch.toIso8601String().substring(0, 10),
+        icon: 'egg',
+        title: 'Éclosion prévue',
+        subtitle: '${inc.label}${inc.eggs > 0 ? ' · ${inc.eggs} œuf${inc.eggs > 1 ? 's' : ''}' : ''}',
+        auto: true,
+        incubationId: inc.id,
+      ));
+    }
     for (final e in events) {
       items.add(AgendaItem(
         date: e.date,
@@ -583,6 +648,48 @@ class AppState extends ChangeNotifier {
     for (final n in visibleNotifications) {
       n.read = true;
     }
+    await commit();
+  }
+
+  // ---------------------------------------------------------------------
+  // Paramètres d'élevage (volières) et incubation
+  // ---------------------------------------------------------------------
+
+  Future<void> addEnvReading(EnvReading reading) async {
+    envReadings.add(reading);
+    await commit();
+  }
+
+  Future<void> deleteEnvReading(String id) async {
+    envReadings.removeWhere((r) => r.id == id);
+    await commit();
+  }
+
+  Incubation? findIncubation(String id) {
+    for (final i in incubations) {
+      if (i.id == id) return i;
+    }
+    return null;
+  }
+
+  Future<void> addIncubation(Incubation incubation) async {
+    incubations.insert(0, incubation);
+    await commit();
+  }
+
+  Future<void> deleteIncubation(String id) async {
+    incubations.removeWhere((i) => i.id == id);
+    await commit();
+  }
+
+  Future<void> addIncubatorReading(Incubation incubation, IncubatorReading reading) async {
+    incubation.readings.add(reading);
+    await commit();
+  }
+
+  Future<void> finishIncubation(Incubation incubation, int hatched) async {
+    incubation.status = 'Terminée';
+    incubation.hatched = hatched;
     await commit();
   }
 

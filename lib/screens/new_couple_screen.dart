@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../logic/inbreeding.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common.dart';
@@ -99,6 +100,14 @@ class _NewCoupleScreenState extends State<NewCoupleScreen> {
             ),
           ),
           if (_male != null && _female != null) ...[
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                'Consanguinité attendue des jeunes : ${formatPercent(info.offspringInbreeding)} '
+                '(${inbreedingLevel(info.offspringInbreeding).toLowerCase()}), calculée sur les ancêtres connus.',
+                style: const TextStyle(fontSize: 12, color: AppColors.mute),
+              ),
+            ),
             for (final m in info.blocking)
               Padding(
                 padding: const EdgeInsets.only(top: 10),

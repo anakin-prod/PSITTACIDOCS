@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../logic/inbreeding.dart';
 import '../models/couple.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
@@ -111,6 +112,16 @@ class _CoupleDetailScreenState extends State<CoupleDetailScreen> {
               );
             }),
           ),
+          if (c.maleRing != null && c.femaleRing != null) ...[
+            const SectionLabel('Consanguinité attendue des jeunes'),
+            Builder(builder: (context) {
+              final coi = widget.appState.offspringInbreeding(c.maleRing, c.femaleRing);
+              return InfoBanner(
+                '${formatPercent(coi)} — ${inbreedingLevel(coi)}. Calcul sur les ancêtres connus.',
+                warning: coi >= kInbreedingWarningThreshold,
+              );
+            }),
+          ],
           const SectionLabel('Étape actuelle'),
           Text(c.stageName, style: const TextStyle(fontWeight: FontWeight.w600)),
           Container(

@@ -1,7 +1,7 @@
 name: psittacidocs
 description: "Psittacidocs — gestion d'élevage de psittacidés"
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.1.0+1
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -27,6 +27,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/data/species.json
+    - assets/data/parrot_facts.json
     - assets/images/icon.png
     - assets/images/logo_horizontal.png
     - assets/images/logo_vertical.png

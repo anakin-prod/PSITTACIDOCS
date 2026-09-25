@@ -63,6 +63,20 @@ Google Play.
 Identifiant de l'application : `app.psittacidocs`. Il devient
 **définitif** dès le premier envoi sur Google Play.
 
+## « Le saviez-vous ? » : ajouter des informations
+
+Les informations affichées au démarrage et dans le menu Plus → « Le saviez-vous ? »
+sont dans `assets/data/parrot_facts.json`. Chaque information a ce format :
+
+```json
+{"id": "f038", "theme": "Anatomie", "text": "…", "source": "Organisme, titre de la page", "sci": "Nom scientifique"}
+```
+
+- `source` est obligatoire : une information sans source n'est pas affichée.
+- `sci` est facultatif : s'il correspond à une espèce de la base, un lien vers
+  sa fiche est proposé, et l'information apparaît aussi sur cette fiche.
+- `theme` libre : chaque nouveau thème devient automatiquement un filtre.
+
 ## Structure du projet
 
 ```

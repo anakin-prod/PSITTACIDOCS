@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../logic/inbreeding.dart';
 import '../models/bird.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
@@ -34,6 +35,15 @@ class GenealogyScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           Text('${bird.ring} · ${sp?.label ?? bird.sci}', style: const TextStyle(color: AppColors.mute)),
+          if (bird.hasParents)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                'Consanguinité : ${formatPercent(appState.inbreedingOf(bird))} — '
+                '${inbreedingLevel(appState.inbreedingOf(bird))}',
+                style: const TextStyle(fontSize: 12, color: AppColors.bronzeDark),
+              ),
+            ),
           const SectionLabel('Grands-parents'),
           Wrap(
             spacing: 8,

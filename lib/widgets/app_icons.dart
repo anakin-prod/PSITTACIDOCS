@@ -43,6 +43,12 @@ IconData iconFor(String name) {
       return Icons.calendar_today_outlined;
     case 'more':
       return Icons.menu;
+    case 'thermo':
+      return Icons.thermostat_outlined;
+    case 'genetics':
+      return Icons.science_outlined;
+    case 'idea':
+      return Icons.lightbulb_outline;
     default:
       return Icons.circle_outlined;
   }

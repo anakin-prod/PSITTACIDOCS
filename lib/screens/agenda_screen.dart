@@ -5,6 +5,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_icons.dart';
 import '../widgets/common.dart';
 import 'bird_detail_screen.dart';
+import 'incubation_detail_screen.dart';
 import 'new_event_screen.dart';
 
 class AgendaScreen extends StatelessWidget {
@@ -82,7 +83,13 @@ class AgendaScreen extends StatelessWidget {
                         builder: (_) => BirdDetailScreen(appState: appState, ring: item.birdRing!),
                       ),
                     )
-                  : null,
+                  : item.incubationId != null
+                      ? () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => IncubationDetailScreen(appState: appState, incubationId: item.incubationId!),
+                          ),
+                        )
+                      : null,
               trailing: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,

@@ -5,6 +5,7 @@ import 'screens/birds_screen.dart';
 import 'screens/couples_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/more_screen.dart';
+import 'screens/facts_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'state/app_state.dart';
 import 'theme/app_theme.dart';
@@ -69,6 +70,17 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   int _tab = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Un « Le saviez-vous ? » à chaque ouverture de l'appli (désactivable).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && widget.appState.settings.showFactOnLaunch) {
+        showFactDialog(context, widget.appState);
+      }
+    });
+  }
 
   static const _titles = [
     'Tableau de bord',

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
 /// Fin cadre bleu nuit autour de tout l'écran, comme dans l'aperçu de l'appli
-/// (filet de 2 px, coins arrondis de 40 px).
+/// (filet d'environ 1 mm, coins arrondis).
 ///
 /// Il est dessiné par-dessus tous les écrans (voir `MaterialApp.builder` dans
 /// main.dart) et ne capte aucun toucher. En bas, il se fond dans le menu de
@@ -35,7 +35,8 @@ class AppFrame extends StatelessWidget {
 class _FramePainter extends CustomPainter {
   const _FramePainter();
 
-  static const double stroke = 2;
+  // 6 unités Flutter ≈ 1 mm à l'écran (1 unité = 1/160 de pouce).
+  static const double stroke = 6;
   static const double radius = 40;
 
   @override

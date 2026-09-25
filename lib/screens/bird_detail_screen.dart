@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../logic/inbreeding.dart';
 import '../models/bird.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
@@ -110,6 +111,10 @@ class _BirdDetailScreenState extends State<BirdDetailScreen> {
                     : sp.isNotListed
                         ? 'Non inscrite'
                         : '${sp.cites} / ${sp.ue}',
+              ),
+              _kv(
+                'Consanguinité',
+                bird.hasParents ? formatPercent(appState.inbreedingOf(bird)) : 'Parents inconnus',
               ),
             ],
           ),

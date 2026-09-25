@@ -1,0 +1,249 @@
+[
+ {
+  "id": "f001",
+  "theme": "Anatomie",
+  "text": "Les perroquets ont deux doigts dirigés vers l'avant et deux vers l'arrière : c'est la disposition « zygodactyle », qu'ils partagent notamment avec les pics et les coucous.",
+  "source": "Encyclopædia Britannica, « Psittaciform »"
+ },
+ {
+  "id": "f002",
+  "theme": "Anatomie",
+  "text": "La partie supérieure du bec d'un perroquet est très mobile. Elle l'aide à manipuler les objets, à casser des noix et à grimper.",
+  "source": "Encyclopædia Britannica, « Psittaciform »"
+ },
+ {
+  "id": "f003",
+  "theme": "Anatomie",
+  "text": "Selon les espèces, un perroquet mesure de 8 cm à 1 m de long : les plus grands sont les aras, grâce à leur longue queue.",
+  "source": "Encyclopædia Britannica, « Psittaciform »"
+ },
+ {
+  "id": "f004",
+  "theme": "Anatomie",
+  "text": "La cire est la zone de peau nue qui entoure les narines, à la base du bec.",
+  "source": "Encyclopædia Britannica, « Psittaciform »"
+ },
+ {
+  "id": "f005",
+  "theme": "Anatomie",
+  "text": "Chez les loris, qui se nourrissent de pollen et de nectar, la langue se termine par des papilles en forme de brosse, idéales pour récolter leur nourriture.",
+  "source": "Grzimek's Animal Life Encyclopedia, « Psittaciformes » (via Encyclopedia.com)"
+ },
+ {
+  "id": "f006",
+  "theme": "Anatomie",
+  "text": "Le gésier des loris est plus faible et moins musclé que celui des perroquets mangeurs de graines : leur régime de pollen, de nectar et de fruits mous n'exige pas de broyage.",
+  "source": "Grzimek's Animal Life Encyclopedia, « Psittaciformes » (via Encyclopedia.com)"
+ },
+ {
+  "id": "f007",
+  "theme": "Comportement",
+  "text": "Pour porter la nourriture à leur bec, les perroquets qui vivent dans les arbres utilisent une patte, le plus souvent la gauche.",
+  "source": "Grzimek's Animal Life Encyclopedia, « Psittaciformes » (via Encyclopedia.com)"
+ },
+ {
+  "id": "f008",
+  "theme": "Comportement",
+  "text": "En grimpant, le perroquet se sert de son bec comme d'un troisième membre : il agrippe une branche avec le bec pendant qu'il se hisse plus haut.",
+  "source": "Grzimek's Animal Life Encyclopedia, « Psittaciformes » (via Encyclopedia.com)"
+ },
+ {
+  "id": "f009",
+  "theme": "Comportement",
+  "text": "Chez l'Éclectus, mâle et femelle ne se ressemblent pas du tout : le mâle est surtout vert, la femelle d'un rouge vin.",
+  "source": "Encyclopædia Britannica, « Parrot »",
+  "sci": "Eclectus roratus"
+ },
+ {
+  "id": "f010",
+  "theme": "Reproduction",
+  "text": "Les perroquets sont monogames. Pour entretenir le lien du couple, les partenaires se lissent mutuellement les plumes, se caressent le bec et se nourrissent l'un l'autre.",
+  "source": "Encyclopædia Britannica, « Psittaciform »"
+ },
+ {
+  "id": "f011",
+  "theme": "Reproduction",
+  "text": "La femelle d'Inséparable rosegorge découpe des bandes d'écorce et les glisse dans les plumes de son croupion pour les transporter jusqu'au nid.",
+  "source": "World Parrot Trust, encyclopédie, « Rosy-faced Lovebird »",
+  "sci": "Agapornis roseicollis"
+ },
+ {
+  "id": "f012",
+  "theme": "Reproduction",
+  "text": "Chez l'Inséparable rosegorge, seule la femelle apporte les matériaux dans le nid. Le mâle peut découper des fibres, mais il n'en transporte pas.",
+  "source": "TIB – Bibliothèque nationale allemande des sciences et techniques, film IWF sur Agapornis roseicollis",
+  "sci": "Agapornis roseicollis"
+ },
+ {
+  "id": "f013",
+  "theme": "Reproduction",
+  "text": "L'Inséparable de Fischer, lui, transporte ses matériaux de nid un par un, dans son bec.",
+  "source": "ScienceBlogs (GrrlScientist), « Lovebird Behavior: Nature or Nurture? », d'après les travaux de William Dilger",
+  "sci": "Agapornis fischeri"
+ },
+ {
+  "id": "f014",
+  "theme": "Reproduction",
+  "text": "Des hybrides d'Inséparable de Fischer et d'Inséparable rosegorge ont montré un comportement de nidification intermédiaire : ils glissaient les bandes dans leurs plumes sans parvenir à les lâcher. Une preuve que ce comportement est en partie héréditaire.",
+  "source": "ScienceBlogs (GrrlScientist), « Lovebird Behavior: Nature or Nurture? », d'après les travaux de William Dilger",
+  "sci": "Agapornis roseicollis"
+ },
+ {
+  "id": "f015",
+  "theme": "Reproduction",
+  "text": "L'Inséparable rosegorge pond de 4 à 6 œufs, incubés pendant environ 23 jours. Les jeunes quittent le nid vers 6 semaines.",
+  "source": "World Parrot Trust, encyclopédie, « Rosy-faced Lovebird »",
+  "sci": "Agapornis roseicollis"
+ },
+ {
+  "id": "f016",
+  "theme": "Espèces remarquables",
+  "text": "L'Inséparable rosegorge mesure environ 15 cm pour 46 à 63 g.",
+  "source": "World Parrot Trust, encyclopédie, « Rosy-faced Lovebird »",
+  "sci": "Agapornis roseicollis"
+ },
+ {
+  "id": "f017",
+  "theme": "Espèces remarquables",
+  "text": "Le Kakapo est le perroquet le plus lourd du monde : les mâles peuvent peser jusqu'à 4 kg.",
+  "source": "Department of Conservation (gouvernement néo-zélandais), fiche « Kākāpō »",
+  "sci": "Strigops habroptila"
+ },
+ {
+  "id": "f018",
+  "theme": "Espèces remarquables",
+  "text": "Le Kakapo est un perroquet nocturne, incapable de voler.",
+  "source": "Department of Conservation (gouvernement néo-zélandais), fiche « Kākāpō »",
+  "sci": "Strigops habroptila"
+ },
+ {
+  "id": "f019",
+  "theme": "Reproduction",
+  "text": "Le Kakapo est le seul perroquet à se reproduire « en lek » : les mâles se regroupent pour parader et appeler les femelles, qui viennent choisir leur partenaire.",
+  "source": "Department of Conservation (gouvernement néo-zélandais), fiche « Kākāpō »",
+  "sci": "Strigops habroptila"
+ },
+ {
+  "id": "f020",
+  "theme": "Espèces remarquables",
+  "text": "Le Kakapo est peut-être l'oiseau qui vit le plus longtemps : de 60 à 90 ans.",
+  "source": "Department of Conservation (gouvernement néo-zélandais), fiche « Kākāpō »",
+  "sci": "Strigops habroptila"
+ },
+ {
+  "id": "f021",
+  "theme": "Reproduction",
+  "text": "Pour séduire les femelles, les mâles de Kakapo creusent des arènes de parade, reliées entre elles par des sentiers qu'ils entretiennent.",
+  "source": "Encyclopædia Britannica, « Kakapo »",
+  "sci": "Strigops habroptila"
+ },
+ {
+  "id": "f022",
+  "theme": "Conservation",
+  "text": "Au milieu des années 1990, il ne restait qu'une cinquantaine de Kakapos. Leur transfert sur des îles sans prédateurs et un suivi très rapproché ont permis à la population de remonter.",
+  "source": "New Zealand Birds Online (Te Papa), fiche « Kākāpō »",
+  "sci": "Strigops habroptila"
+ },
+ {
+  "id": "f023",
+  "theme": "Réglementation",
+  "text": "Le Kakapo figure à l'Annexe I de la CITES, le niveau de protection le plus élevé.",
+  "source": "Règlement (UE) 2019/2117, annexe (JO L 320 du 11/12/2019)",
+  "sci": "Strigops habroptila"
+ },
+ {
+  "id": "f024",
+  "theme": "Espèces remarquables",
+  "text": "Le nom « kéa » vient des Maoris : il imite le cri de l'oiseau, un « kii-aa ! » sonore.",
+  "source": "Kea Conservation Trust, « Kea facts »",
+  "sci": "Nestor notabilis"
+ },
+ {
+  "id": "f025",
+  "theme": "Espèces remarquables",
+  "text": "Sous son plumage vert olive, le Kéa cache des dessous d'ailes d'un orange-rouge éclatant, visibles seulement en vol.",
+  "source": "Kea Conservation Trust, « Kea facts »",
+  "sci": "Nestor notabilis"
+ },
+ {
+  "id": "f026",
+  "theme": "Conservation",
+  "text": "De la fin des années 1870 jusqu'aux années 1970, une prime gouvernementale a conduit à l'abattage de plus de 150 000 Kéas en Nouvelle-Zélande, selon une estimation prudente.",
+  "source": "Kea Conservation Trust, « Kea facts »",
+  "sci": "Nestor notabilis"
+ },
+ {
+  "id": "f027",
+  "theme": "Espèces remarquables",
+  "text": "Chez le Kéa, le bec du mâle est plus recourbé que celui de la femelle.",
+  "source": "Hamilton Zoo (Nouvelle-Zélande), fiche « Kea »",
+  "sci": "Nestor notabilis"
+ },
+ {
+  "id": "f028",
+  "theme": "Espèces remarquables",
+  "text": "Le Kéa, qui vit dans les Alpes du Sud néo-zélandaises, est considéré comme le seul perroquet véritablement alpin.",
+  "source": "Hamilton Zoo (Nouvelle-Zélande), fiche « Kea »",
+  "sci": "Nestor notabilis"
+ },
+ {
+  "id": "f029",
+  "theme": "Reproduction",
+  "text": "La Conure veuve et sa proche parente, la Conure des falaises, sont les seuls perroquets à construire des nids en brindilles et à nicher en colonie.",
+  "source": "Cornell Lab of Ornithology, All About Birds, « Monk Parakeet »",
+  "sci": "Myiopsitta monachus"
+ },
+ {
+  "id": "f030",
+  "theme": "Reproduction",
+  "text": "Un nid collectif de Conures veuves compte souvent jusqu'à 20 chambres, et dans les cas extrêmes plus de 200 nids. L'ensemble peut peser une tonne ou plus.",
+  "source": "Cornell Lab of Ornithology, All About Birds, « Monk Parakeet »",
+  "sci": "Myiopsitta monachus"
+ },
+ {
+  "id": "f031",
+  "theme": "Comportement",
+  "text": "Chez la Conure veuve, tous les membres de la colonie, y compris les jeunes et les oiseaux qui ne se reproduisent pas, participent à la construction et à l'entretien du nid.",
+  "source": "Cornell Lab of Ornithology, All About Birds, « Monk Parakeet »",
+  "sci": "Myiopsitta monachus"
+ },
+ {
+  "id": "f032",
+  "theme": "Conservation",
+  "text": "Issues d'oiseaux du commerce, des populations sauvages de Conures veuves se sont installées aux États-Unis dès les années 1960, jusque dans des villes aux hivers rudes comme New York ou Chicago.",
+  "source": "Cornell Lab of Ornithology, All About Birds, « Monk Parakeet »",
+  "sci": "Myiopsitta monachus"
+ },
+ {
+  "id": "f033",
+  "theme": "Réglementation",
+  "text": "Presque tous les perroquets sont protégés par la CITES. Seules quatre espèces échappent aux annexes CITES et européennes : la Perruche ondulée, la Calopsitte élégante, l'Inséparable rosegorge et la Perruche à collier.",
+  "source": "Règlement (UE) 2019/2117, annexe (JO L 320 du 11/12/2019)"
+ },
+ {
+  "id": "f034",
+  "theme": "Réglementation",
+  "text": "L'Union européenne est parfois plus stricte que la CITES : tous les loris du genre Vini sont en Annexe A, alors que seul le Lori ultramarin figure à l'Annexe I de la CITES.",
+  "source": "Règlement (UE) 2019/2117, annexe (JO L 320 du 11/12/2019)",
+  "sci": "Vini ultramarina"
+ },
+ {
+  "id": "f035",
+  "theme": "Réglementation",
+  "text": "Lors de la conférence CITES de fin 2025 (CoP20), aucune des 51 propositions de modification des annexes ne concernait un perroquet.",
+  "source": "Environnement et Changement climatique Canada, résultats des propositions de la CoP20"
+ },
+ {
+  "id": "f036",
+  "theme": "Réglementation",
+  "text": "Dans l'Union européenne, la vente ou la cession d'un oiseau d'une espèce inscrite à l'Annexe A nécessite en principe un certificat intracommunautaire (CIC).",
+  "source": "Commission européenne, guide de référence sur le commerce des espèces sauvages (déc. 2025)"
+ },
+ {
+  "id": "f037",
+  "theme": "Réglementation",
+  "text": "Le Perroquet jaco figure à l'Annexe I de la CITES et à l'Annexe A du règlement européen.",
+  "source": "Règlement (UE) 2019/2117, annexe (JO L 320 du 11/12/2019)",
+  "sci": "Psittacus erithacus"
+ }
+]
