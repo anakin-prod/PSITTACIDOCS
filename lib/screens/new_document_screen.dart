@@ -36,9 +36,11 @@ class _NewDocumentScreenState extends State<NewDocumentScreen> {
   }
 
   Future<void> _pickFile() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result != null && result.files.isNotEmpty) {
-      setState(() => _fileName = result.files.single.name);
+    // API file_picker v13 : pickFile() renvoie le fichier choisi, ou null si
+    // l'utilisateur a annulé.
+    final file = await FilePicker.pickFile();
+    if (file != null) {
+      setState(() => _fileName = file.name);
     }
   }
 
