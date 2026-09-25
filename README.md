@@ -26,35 +26,31 @@ bash scripts/prepare_android.sh
 flutter run                       # ou : flutter build apk / flutter build appbundle
 ```
 
-## Les trois builds Codemagic
+## Les deux builds Codemagic
 
-Le fichier `codemagic.yaml` définit trois workflows, à lancer à la main depuis
+Le fichier `codemagic.yaml` définit deux workflows, à lancer à la main depuis
 Codemagic (**Start new build**, puis choix du workflow) :
 
 | Workflow | Résultat | Quand l'utiliser |
 | --- | --- | --- |
 | **1 · Build de test** | `psittacidocs-test-N.apk` | Pour installer l'appli sur ton téléphone et la tester. Signé avec une clé de test : refusé par Google Play. |
 | **2 · Build Google Play** | `psittacidocs-play-N.aab` | Pour publier sur Google Play. Signé avec ta propre clé. |
-| **3 · Générer la clé** | `psittacidocs-upload.jks` + `IDENTIFIANTS_CLE_A_CONSERVER.txt` | **Une seule fois**, avant le premier build Google Play. |
 
 Les fichiers produits se téléchargent dans l'onglet **Artifacts** du build.
 
-### Mise en place de la clé (une seule fois)
+### La clé de signature
 
-1. Lance le workflow **3 · Générer la clé de signature** et télécharge les deux
-   fichiers produits. Conserve-les précieusement (sauvegarde + gestionnaire de
-   mots de passe) : toutes les futures mises à jour devront être signées avec
-   cette même clé, et Codemagic ne permet pas de la re-télécharger.
-2. Dans Codemagic : **Team settings → codemagic.yaml settings → Code signing
-   identities → Android keystores**. Envoie `psittacidocs-upload.jks` et
-   recopie les valeurs du fichier d'identifiants (Keystore password, Key alias,
-   Key password). Dans **Reference name**, écris exactement :
-   `psittacidocs_upload`.
-3. Lance le workflow **2 · Build Google Play** : il vérifie qu'il reçoit bien la
-   clé, compile, puis contrôle que le fichier n'est pas signé avec une clé de
-   test avant de le livrer.
+La clé a déjà été générée et enregistrée dans Codemagic (**Team settings →
+codemagic.yaml settings → Code signing identities → Android keystores**) sous
+le nom de référence `psittacidocs_upload`. Le build Google Play la récupère
+automatiquement, vérifie qu'il la reçoit bien, puis contrôle que le fichier
+produit n'est pas signé avec une clé de test avant de le livrer.
 
-Ne relance pas le workflow 3 ensuite : il créerait une nouvelle clé, différente.
+Garde précieusement `psittacidocs-upload.jks` et le fichier d'identifiants :
+Codemagic ne permet pas de les re-télécharger. Le script qui a servi à créer la
+clé est conservé dans `scripts/generate_keystore.sh`, uniquement pour un
+éventuel besoin futur (par exemple après une réinitialisation de la clé auprès
+du support Google Play).
 
 ### Premier envoi sur Google Play
 

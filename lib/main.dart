@@ -8,6 +8,7 @@ import 'screens/more_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'state/app_state.dart';
 import 'theme/app_theme.dart';
+import 'widgets/app_frame.dart';
 
 void main() {
   runApp(const PsittacidocsApp());
@@ -35,6 +36,8 @@ class _PsittacidocsAppState extends State<PsittacidocsApp> {
       title: 'Psittacidocs',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
+      // Fin cadre bleu nuit autour de tous les écrans, comme dans l'aperçu.
+      builder: (context, child) => AppFrame(child: child ?? const SizedBox.shrink()),
       home: AnimatedBuilder(
         animation: appState,
         builder: (context, _) {

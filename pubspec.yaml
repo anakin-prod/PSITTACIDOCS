@@ -21,7 +21,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
@@ -35,6 +35,10 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/images/play_store_icon_512.png"
-  adaptive_icon_background: "assets/images/adaptive_icon_background.png"
+  # Icône adaptative Android : fond bleu nuit uni + perroquet centré sur fond
+  # transparent. Avec une marge de 16 %, l'image du premier plan correspond à
+  # la zone visible de l'icône : même composition que l'icône de l'en-tête.
+  adaptive_icon_background: "#0E2254"
   adaptive_icon_foreground: "assets/images/adaptive_icon_foreground.png"
+  adaptive_icon_foreground_inset: 16
   min_sdk_android: 21
