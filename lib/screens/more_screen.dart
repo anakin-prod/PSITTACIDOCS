@@ -40,10 +40,10 @@ class MoreScreen extends StatelessWidget {
 
     return SafeArea(
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+        padding: const EdgeInsets.fromLTRB(18, 14, 18, 110),
         children: staggered([
-          Text('Plus', style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: 12),
+          const ScreenHeader(title: 'Plus', subtitle: 'Outils, suivi et réglages'),
+          const GroupLabel('Mon élevage'),
           InfoCard(
             leading: _menuIcon('doc'),
             title: 'Documents et traçabilité',
@@ -71,6 +71,16 @@ class MoreScreen extends StatelessWidget {
             ),
           ),
           InfoCard(
+            leading: _menuIcon('chart'),
+            title: 'Statistiques',
+            subtitle: 'Reproduction, jeunes, historique',
+            trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => StatsScreen(appState: appState)),
+            ),
+          ),
+          const GroupLabel('Suivi'),
+          InfoCard(
             leading: _menuIcon('thermo'),
             title: 'Conditions des volières',
             subtitle: 'Température, humidité, éclairage',
@@ -97,6 +107,16 @@ class MoreScreen extends StatelessWidget {
               MaterialPageRoute(builder: (_) => const GeneticsScreen()),
             ),
           ),
+          const GroupLabel('Ressources'),
+          InfoCard(
+            leading: _menuIcon('book'),
+            title: 'Espèces de psittacidés',
+            subtitle: '${appState.species.length} espèces intégrées',
+            trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => SpeciesScreen(appState: appState)),
+            ),
+          ),
           InfoCard(
             leading: _menuIcon('pdf'),
             title: 'Inventaire de l’élevage (PDF)',
@@ -111,24 +131,7 @@ class MoreScreen extends StatelessWidget {
               }
             },
           ),
-          InfoCard(
-            leading: _menuIcon('chart'),
-            title: 'Statistiques',
-            subtitle: 'Reproduction, jeunes, historique',
-            trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => StatsScreen(appState: appState)),
-            ),
-          ),
-          InfoCard(
-            leading: _menuIcon('book'),
-            title: 'Espèces de psittacidés',
-            subtitle: '${appState.species.length} espèces intégrées',
-            trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => SpeciesScreen(appState: appState)),
-            ),
-          ),
+          const GroupLabel('Réglages'),
           InfoCard(
             leading: _menuIcon('gear'),
             title: 'Paramètres',
@@ -143,9 +146,5 @@ class MoreScreen extends StatelessWidget {
     );
   }
 
-  Widget _menuIcon(String name) => CircleAvatar(
-    radius: 18,
-    backgroundColor: const Color(0xFF0E2254),
-    child: Icon(iconFor(name), color: Colors.white, size: 18),
-  );
+  Widget _menuIcon(String name) => IconTile(name: name);
 }

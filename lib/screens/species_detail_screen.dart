@@ -58,7 +58,7 @@ class SpeciesDetailScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: s.cites == 'I' ? AppColors.navy : Colors.white,
                     borderRadius: BorderRadius.circular(14),
-                    border: s.cites == 'I' ? null : Border.all(color: AppColors.line),
+                    boxShadow: s.cites == 'I' ? null : AppDecor.shadowLight,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +81,7 @@ class SpeciesDetailScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: s.ue == 'A' ? AppColors.navy : Colors.white,
                     borderRadius: BorderRadius.circular(14),
-                    border: s.ue == 'A' ? null : Border.all(color: AppColors.line),
+                    boxShadow: s.ue == 'A' ? null : AppDecor.shadowLight,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,11 +119,7 @@ class SpeciesDetailScreen extends StatelessWidget {
             ),
           const SectionLabel('Source officielle'),
           InfoCard(
-            leading: CircleAvatar(
-              radius: 18,
-              backgroundColor: AppColors.navy,
-              child: Icon(iconFor('shield'), color: Colors.white, size: 18),
-            ),
+            leading: IconTile(name: 'shield', size: 40),
             title: 'Vérifier sur Species+',
             subtitle: 'Base officielle CITES et UE (PNUE-WCMC)',
             onTap: () => launchUrl(Uri.parse(speciesPlusUrl), mode: LaunchMode.externalApplication),

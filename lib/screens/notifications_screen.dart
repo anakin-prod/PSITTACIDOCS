@@ -59,11 +59,9 @@ class _NotifTile extends StatelessWidget {
     return Opacity(
       opacity: notif.read ? 0.6 : 1,
       child: InfoCard(
-        leading: CircleAvatar(
-          radius: 18,
-          backgroundColor: notif.urgent && !notif.read ? AppColors.red : AppColors.navy,
-          child: Icon(iconFor(notif.icon), color: Colors.white, size: 18),
-        ),
+        leading: notif.urgent && !notif.read
+            ? Container(width: 40, height: 40, decoration: BoxDecoration(color: const Color(0xFFFBE0E2), borderRadius: BorderRadius.circular(13)), child: Icon(iconFor(notif.icon), color: AppColors.redText, size: 20))
+            : IconTile(name: notif.icon),
         title: notif.title,
         subtitle: '${notif.subtitle} · ${notif.when}',
         trailing: notif.read

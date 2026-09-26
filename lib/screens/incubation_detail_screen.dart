@@ -122,11 +122,7 @@ class _IncubationDetailScreenState extends State<IncubationDetailScreen> {
           FadeSlideIn(
             child: Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.line),
-              ),
+              decoration: AppDecor.card(radius: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -195,11 +191,7 @@ class _IncubationDetailScreenState extends State<IncubationDetailScreen> {
               child: Container(
                 margin: const EdgeInsets.only(top: 12),
                 padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.line),
-                ),
+                decoration: AppDecor.card(radius: 20),
                 child: Column(
                   children: [
                     Text(
@@ -261,13 +253,7 @@ class _IncubationDetailScreenState extends State<IncubationDetailScreen> {
           for (final r in readings.reversed)
             InfoCard(
               dense: true,
-              leading: CircleAvatar(
-                radius: 16,
-                backgroundColor: (inc.tempOutOfRange(r.temperature) || inc.humOutOfRange(r.humidity))
-                    ? AppColors.red
-                    : AppColors.navy,
-                child: Icon(iconFor('thermo'), color: Colors.white, size: 16),
-              ),
+              leading: Container(width: 34, height: 34, decoration: BoxDecoration(color: (inc.tempOutOfRange(r.temperature) || inc.humOutOfRange(r.humidity)) ? const Color(0xFFFBE0E2) : AppColors.maleBg, borderRadius: BorderRadius.circular(11)), child: Icon(iconFor('thermo'), color: (inc.tempOutOfRange(r.temperature) || inc.humOutOfRange(r.humidity)) ? AppColors.redText : AppColors.maleFg, size: 17)),
               title: [
                 if (r.temperature != null) '${formatNumber(r.temperature!)} °C',
                 if (r.humidity != null) '${formatNumber(r.humidity!)} %',

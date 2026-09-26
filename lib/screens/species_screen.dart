@@ -107,7 +107,7 @@ class _SpeciesScreenState extends State<SpeciesScreen> {
               scrollDirection: Axis.horizontal,
               itemCount: kSpeciesGroups.length,
               separatorBuilder: (_, __) => const SizedBox(width: 8),
-              itemBuilder: (context, i) => ChoiceChip(
+              itemBuilder: (context, i) => PillChoice(
                 label: Text(kSpeciesGroups[i]),
                 selected: _group == kSpeciesGroups[i],
                 onSelected: (_) => setState(() => _group = kSpeciesGroups[i]),
@@ -121,7 +121,7 @@ class _SpeciesScreenState extends State<SpeciesScreen> {
               scrollDirection: Axis.horizontal,
               itemCount: kProtectionFilters.length,
               separatorBuilder: (_, __) => const SizedBox(width: 8),
-              itemBuilder: (context, i) => ChoiceChip(
+              itemBuilder: (context, i) => PillChoice(
                 label: Text(kProtectionFilters[i]),
                 selected: _prot == kProtectionFilters[i],
                 onSelected: (_) => setState(() => _prot = kProtectionFilters[i]),

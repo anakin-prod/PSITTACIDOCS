@@ -8,6 +8,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_icons.dart';
 import 'species_detail_screen.dart';
 import '../widgets/animations.dart';
+import '../widgets/common.dart';
 
 /// Petite étiquette de thème (« Anatomie », « Reproduction »…).
 class _ThemeTag extends StatelessWidget {
@@ -34,74 +35,103 @@ class PsittacopedieCard extends StatelessWidget {
     if (fact == null) return const SizedBox.shrink();
     final sp = fact.sci == null ? null : appState.speciesBySci(fact.sci!);
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.line),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(iconFor('idea'), color: AppColors.bronze, size: 20),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  'Psittacopédie',
-                  style: GoogleFonts.lora(fontSize: 17, fontWeight: FontWeight.w600, color: AppColors.navy),
-                ),
-              ),
-              _ThemeTag(fact.theme),
-            ],
-          ),
-          const SizedBox(height: 10),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 380),
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: Tween<Offset>(begin: const Offset(0.06, 0), end: Offset.zero).animate(animation),
-                child: child,
-              ),
+    return PressableScale(
+      child: Container(
+        decoration: AppDecor.card(radius: 22),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(22),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => PsittacopedieScreen(appState: appState)),
             ),
-            child: Column(
-              key: ValueKey(fact.id),
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(fact.text, style: const TextStyle(fontSize: 14, height: 1.4, color: AppColors.navy)),
-                const SizedBox(height: 8),
-                Text('Source : ${fact.source}', style: const TextStyle(fontSize: 11, color: AppColors.mute)),
-              ],
-            ),
-          ),
-          Wrap(
-            spacing: 4,
-            children: [
-              TextButton.icon(
-                icon: const Icon(Icons.refresh, size: 16),
-                label: const Text('Une autre'),
-                onPressed: appState.nextFact,
-              ),
-              if (sp != null)
-                TextButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => SpeciesDetailScreen(appState: appState, sci: sp.sci)),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(iconFor('idea'), color: AppColors.bronzeDark, size: 19),
+                      const SizedBox(width: 8),
+                      const Expanded(
+                        child: Text(
+                          'PSITTACOPÉDIE',
+                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1.1, color: AppColors.bronzeDark),
+                        ),
+                      ),
+                      _ThemeTag(fact.theme),
+                    ],
                   ),
-                  child: Text('Fiche : ${sp.label}'),
-                ),
-              TextButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => PsittacopedieScreen(appState: appState)),
-                ),
-                child: const Text('Tout voir'),
+                  const SizedBox(height: 10),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 380),
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: Tween<Offset>(begin: const Offset(0.06, 0), end: Offset.zero).animate(animation),
+                        child: child,
+                      ),
+                    ),
+                    child: Column(
+                      key: ValueKey(fact.id),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          fact.text,
+                          style: GoogleFonts.lora(fontSize: 16.5, height: 1.45, fontWeight: FontWeight.w500, color: AppColors.navy),
+                        ),
+                        const SizedBox(height: 10),
+                        Text('Source : ${fact.source}', style: const TextStyle(fontSize: 11, color: AppColors.mute)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      if (sp != null)
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => SpeciesDetailScreen(appState: appState, sci: sp.sci)),
+                            ),
+                            child: Text(
+                              'Fiche : ${sp.label}',
+                              style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w500, color: AppColors.bronzeDark),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
+                      else
+                        const Spacer(),
+                      PressableScale(
+                        child: Material(
+                          color: AppColors.bronzeBg,
+                          borderRadius: BorderRadius.circular(12),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            onTap: appState.nextFact,
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.refresh_rounded, size: 16, color: AppColors.bronzeDark),
+                                  SizedBox(width: 6),
+                                  Text('Une autre', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: AppColors.bronzeDark)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -165,7 +195,7 @@ class _PsittacopedieScreenState extends State<PsittacopedieScreen> {
               scrollDirection: Axis.horizontal,
               itemCount: themes.length,
               separatorBuilder: (_, __) => const SizedBox(width: 8),
-              itemBuilder: (context, i) => ChoiceChip(
+              itemBuilder: (context, i) => PillChoice(
                 label: Text(themes[i]),
                 selected: _theme == themes[i],
                 onSelected: (_) => setState(() => _theme = themes[i]),
@@ -196,11 +226,7 @@ class _FactTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.line),
-      ),
+      decoration: AppDecor.card(radius: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

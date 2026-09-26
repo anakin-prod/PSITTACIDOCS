@@ -35,6 +35,7 @@ flutter:
     - assets/images/icon.png
     - assets/images/splash_parrot.png
     - assets/images/nav_parrot.png
+    - assets/images/parrot_silhouette.png
     - assets/fonts/Poppins-Regular.ttf
     - assets/fonts/Poppins-Bold.ttf
     - assets/images/logo_horizontal.png

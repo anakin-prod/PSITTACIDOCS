@@ -10,6 +10,7 @@ import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import 'bird_detail_screen.dart';
 import 'species_picker_screen.dart';
+import '../widgets/common.dart';
 
 class AddBirdScreen extends StatefulWidget {
   final AppState appState;
@@ -303,11 +304,7 @@ class _AddBirdScreenState extends State<AddBirdScreen> {
     width: double.infinity,
     margin: const EdgeInsets.only(bottom: 12),
     padding: const EdgeInsets.all(14),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(14),
-      border: Border.all(color: AppColors.line),
-    ),
+    decoration: AppDecor.card(radius: 20),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -330,7 +327,7 @@ class _AddBirdScreenState extends State<AddBirdScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(right: 6),
-              child: ChoiceChip(
+              child: PillChoice(
                 label: Text(labels?[v] ?? v),
                 selected: current == v,
                 onSelected: (_) => onChanged(v),

@@ -56,11 +56,7 @@ class _NewCoupleScreenState extends State<NewCoupleScreen> {
         children: [
           Container(
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.line),
-            ),
+            decoration: AppDecor.card(radius: 20),
             child: Column(
               children: [
                 DropdownButtonFormField<String>(

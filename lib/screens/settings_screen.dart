@@ -34,11 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           Container(
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.line),
-            ),
+            decoration: AppDecor.card(radius: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -71,11 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           Container(
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.line),
-            ),
+            decoration: AppDecor.card(radius: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -102,11 +94,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SectionLabel('Rappels'),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.line),
-            ),
+            decoration: AppDecor.card(radius: 20),
             child: Column(
               children: [
                 SwitchListTile(
@@ -153,8 +141,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           const SectionLabel('À propos'),
-          const InfoCard(
-            leading: CircleAvatar(radius: 18, backgroundColor: AppColors.navy, child: Icon(Icons.eco, color: Colors.white, size: 18)),
+          InfoCard(
+            leading: ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.asset('assets/images/icon.png', width: 40, height: 40)),
             title: 'Psittacidocs',
             subtitle: 'Version 1.0',
           ),

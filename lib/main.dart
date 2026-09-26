@@ -4,10 +4,8 @@ import 'package:flutter/services.dart';
 import 'screens/agenda_screen.dart';
 import 'screens/birds_screen.dart';
 import 'screens/couples_screen.dart';
-import 'screens/global_search_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/more_screen.dart';
-import 'screens/notifications_screen.dart';
 import 'screens/splash_view.dart';
 import 'state/app_state.dart';
 import 'theme/app_theme.dart';
@@ -79,13 +77,10 @@ class HomeShell extends StatefulWidget {
 class _HomeShellState extends State<HomeShell> {
   int _tab = 0;
 
-  static const _titles = [
-    'Tableau de bord',
-    'Mes oiseaux',
-    'Couples et reproduction',
-    'Agenda',
-    'Plus',
-  ];
+  void _select(int i) {
+    if (i != _tab) HapticFeedback.selectionClick();
+    setState(() => _tab = i);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,116 +94,102 @@ class _HomeShellState extends State<HomeShell> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 16,
-        title: Row(
+      // Le contenu défile sous le menu flottant.
+      extendBody: true,
+      body: SafeArea(
+        bottom: false,
+        child: IndexedStack(index: _tab, children: screens),
+      ),
+      bottomNavigationBar: FloatingNavBar(current: _tab, onSelect: _select),
+    );
+  }
+}
+
+/// Menu du bas flottant : une barre bleu nuit arrondie ; l'onglet actif
+/// affiche son nom dans une pastille bronze, les autres leur seule icône.
+class FloatingNavBar extends StatelessWidget {
+  final int current;
+  final ValueChanged<int> onSelect;
+  const FloatingNavBar({super.key, required this.current, required this.onSelect});
+
+  static const _labels = ['Accueil', 'Oiseaux', 'Couples', 'Agenda', 'Plus'];
+
+  Widget _icon(int i, Color color) {
+    switch (i) {
+      case 0:
+        return Icon(Icons.grid_view_rounded, color: color, size: 22);
+      case 1:
+        return ImageIcon(const AssetImage('assets/images/nav_parrot.png'), color: color, size: 24);
+      case 2:
+        return Icon(Icons.favorite_border_rounded, color: color, size: 22);
+      case 3:
+        return Icon(Icons.calendar_today_outlined, color: color, size: 21);
+      default:
+        return Icon(Icons.menu_rounded, color: color, size: 23);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Container(
+        height: 66,
+        margin: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          color: AppColors.navy,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: AppDecor.shadowStrong,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                'assets/images/icon.png',
-                width: 36,
-                height: 36,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Psittacidocs',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                Text(
-                  _titles[_tab],
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.bronzeDark,
+            for (var i = 0; i < _labels.length; i++)
+              Semantics(
+                button: true,
+                selected: i == current,
+                label: _labels[i],
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => onSelect(i),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 260),
+                    curve: Curves.easeOutCubic,
+                    height: 46,
+                    padding: EdgeInsets.symmetric(horizontal: i == current ? 16 : 12),
+                    decoration: BoxDecoration(
+                      color: i == current ? AppColors.bronze.withValues(alpha: 0.2) : Colors.transparent,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _icon(i, i == current ? AppColors.bronzeOnNavy : AppColors.navInactive),
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 260),
+                          curve: Curves.easeOutCubic,
+                          child: i == current
+                              ? Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: Text(
+                                    _labels[i],
+                                    style: const TextStyle(
+                                      color: AppColors.bronzeOnNavy,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ],
-            ),
+              ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            tooltip: 'Rechercher',
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => GlobalSearchScreen(appState: appState)),
-            ),
-          ),
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_none_rounded),
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => NotificationsScreen(appState: appState),
-                  ),
-                ),
-              ),
-              if (appState.unreadCount > 0)
-                Positioned(
-                  right: 6,
-                  top: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                    decoration: BoxDecoration(
-                      color: AppColors.red,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      appState.unreadCount > 9 ? '9+' : '${appState.unreadCount}',
-                      style: const TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(width: 4),
-        ],
-      ),
-      body: IndexedStack(index: _tab, children: screens),
-      // Marges latérales : les libellés du menu restent à l'écart des coins
-      // arrondis du cadre (le « A » d'« Accueil » n'est plus rogné).
-      bottomNavigationBar: Container(
-        color: AppColors.navy,
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: BottomNavigationBar(
-        elevation: 0,
-        backgroundColor: AppColors.navy,
-        currentIndex: _tab,
-        onTap: (i) {
-          if (i != _tab) HapticFeedback.selectionClick();
-          setState(() => _tab = i);
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_rounded),
-            label: 'Accueil',
-          ),
-          BottomNavigationBarItem(
-            // Silhouette du perroquet du logo.
-            icon: ImageIcon(AssetImage('assets/images/nav_parrot.png')),
-            label: 'Oiseaux',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: 'Couples',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
-            label: 'Agenda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_rounded),
-            label: 'Plus',
-          ),
-        ],
-      ),
       ),
     );
   }

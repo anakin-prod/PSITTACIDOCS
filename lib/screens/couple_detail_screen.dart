@@ -114,11 +114,7 @@ class _CoupleDetailScreenState extends State<CoupleDetailScreen> {
           Container(
             margin: const EdgeInsets.only(top: 10),
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.line),
-            ),
+            decoration: AppDecor.card(radius: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -167,11 +163,7 @@ class _CoupleDetailScreenState extends State<CoupleDetailScreen> {
             const SectionLabel('Historique des pontes'),
             for (final h in c.history)
               InfoCard(
-                leading: CircleAvatar(
-                  radius: 16,
-                  backgroundColor: AppColors.navy,
-                  child: Icon(iconFor('egg'), color: Colors.white, size: 16),
-                ),
+                leading: IconTile(name: 'egg', size: 34),
                 title: h,
                 dense: true,
               ),

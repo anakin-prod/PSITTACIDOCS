@@ -20,27 +20,18 @@ class AgendaScreen extends StatelessWidget {
 
     return SafeArea(
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+        padding: const EdgeInsets.fromLTRB(18, 14, 18, 110),
         children: staggered([
-          Row(
-            children: [
-              Expanded(
-                child: Text('Agenda', style: Theme.of(context).textTheme.headlineSmall),
+          ScreenHeader(
+            title: 'Agenda',
+            subtitle: '${items.length} échéance${items.length > 1 ? 's' : ''} à venir',
+            trailing: AddButton(
+              tooltip: 'Ajouter un événement',
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => NewEventScreen(appState: appState)),
               ),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.add, size: 16),
-                label: const Text('Ajouter'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(0, 40),
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                ),
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => NewEventScreen(appState: appState)),
-                ),
-              ),
-            ],
+            ),
           ),
-          const SizedBox(height: 12),
           Row(
             children: List.generate(7, (i) {
               const labels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
@@ -52,8 +43,8 @@ class AgendaScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: isToday ? AppColors.navy : Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: isToday ? null : Border.all(color: AppColors.line),
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: isToday ? null : AppDecor.shadowLight,
                   ),
                   child: Text(
                     labels[i],
@@ -71,11 +62,7 @@ class AgendaScreen extends StatelessWidget {
             const EmptyHint('Aucun événement à venir. Ajoutez un rendez-vous ou une tâche.'),
           for (final item in items)
             InfoCard(
-              leading: CircleAvatar(
-                radius: 18,
-                backgroundColor: AppColors.navy,
-                child: Icon(iconFor(item.icon), color: Colors.white, size: 18),
-              ),
+              leading: IconTile(name: item.icon, size: 40),
               title: item.title,
               subtitle: item.subtitle,
               onTap: item.birdRing != null

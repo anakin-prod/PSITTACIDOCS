@@ -45,7 +45,7 @@ class _GeneticsScreenState extends State<GeneticsScreen> {
       runSpacing: 6,
       children: [
         for (final o in options)
-          ChoiceChip(
+          PillChoice(
             label: Text(o.label),
             selected: current == o.copies,
             onSelected: (_) => setState(() {
@@ -68,11 +68,7 @@ class _GeneticsScreenState extends State<GeneticsScreen> {
       key: ObjectKey(g),
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.line),
-      ),
+      decoration: AppDecor.card(radius: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -130,11 +126,7 @@ class _GeneticsScreenState extends State<GeneticsScreen> {
         Container(
           margin: const EdgeInsets.only(bottom: 6),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.line),
-          ),
+          decoration: AppDecor.card(radius: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

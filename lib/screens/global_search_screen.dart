@@ -34,11 +34,7 @@ class _GlobalSearchScreenState extends State<GlobalSearchScreen> {
     super.dispose();
   }
 
-  Widget _icon(String name) => CircleAvatar(
-    radius: 18,
-    backgroundColor: AppColors.navy,
-    child: Icon(iconFor(name), color: Colors.white, size: 18),
-  );
+  Widget _icon(String name) => IconTile(name: name, size: 40);
 
   void _open(Widget screen) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
 

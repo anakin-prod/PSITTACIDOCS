@@ -76,7 +76,7 @@ class _EnvReadingsScreenState extends State<EnvReadingsScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
-                  child: ChoiceChip(
+                  child: PillChoice(
                     label: const Text('Toutes'),
                     selected: _location == null,
                     onSelected: (_) => setState(() => _location = null),
@@ -85,7 +85,7 @@ class _EnvReadingsScreenState extends State<EnvReadingsScreen> {
                 for (final l in locations)
                   Padding(
                     padding: const EdgeInsets.only(right: 8),
-                    child: ChoiceChip(
+                    child: PillChoice(
                       label: Text(l),
                       selected: _location == l,
                       onSelected: (_) => setState(() => _location = l),
@@ -102,11 +102,7 @@ class _EnvReadingsScreenState extends State<EnvReadingsScreen> {
               key: ValueKey('last-${filtered.first.id}'),
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.line),
-              ),
+              decoration: AppDecor.card(radius: 20),
               child: Column(
                 children: [
                   Text(
@@ -138,11 +134,7 @@ class _EnvReadingsScreenState extends State<EnvReadingsScreen> {
             const EmptyHint('Aucun relevé pour l’instant. Touche + pour en ajouter un.'),
           for (final r in filtered)
             InfoCard(
-              leading: CircleAvatar(
-                radius: 18,
-                backgroundColor: r.temperature == null ? AppColors.navy : ambientTemperatureColor(r.temperature!),
-                child: Icon(iconFor('thermo'), color: Colors.white, size: 18),
-              ),
+              leading: Container(width: 40, height: 40, decoration: BoxDecoration(color: r.temperature == null ? AppColors.navy : ambientTemperatureColor(r.temperature!), borderRadius: BorderRadius.circular(13)), child: Icon(iconFor('thermo'), color: Colors.white, size: 18)),
               title: _summary(r),
               subtitle: '${r.location} · ${formatDateTime(DateTime.parse(r.date))}'
                   '${r.notes.isNotEmpty ? ' · ${r.notes}' : ''}',

@@ -71,7 +71,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               scrollDirection: Axis.horizontal,
               itemCount: types.length,
               separatorBuilder: (_, __) => const SizedBox(width: 8),
-              itemBuilder: (context, i) => ChoiceChip(
+              itemBuilder: (context, i) => PillChoice(
                 label: Text(types[i]),
                 selected: _type == types[i],
                 onSelected: (_) => setState(() => _type = types[i]),
@@ -84,11 +84,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
           if (docs.isEmpty) const EmptyHint('Aucun document ne correspond.'),
           for (final e in docs)
             InfoCard(
-              leading: CircleAvatar(
-                radius: 18,
-                backgroundColor: AppColors.navy,
-                child: Icon(iconFor('doc'), color: Colors.white, size: 18),
-              ),
+              leading: IconTile(name: 'doc', size: 40),
               title: e.value.type,
               subtitle: '${e.key.ring} · ${appState.speciesBySci(e.key.sci)?.label ?? e.key.sci} · ${e.value.fileName}',
               onTap: () => Navigator.of(context).push(

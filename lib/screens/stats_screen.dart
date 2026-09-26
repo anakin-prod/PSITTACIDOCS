@@ -78,11 +78,7 @@ class StatsScreen extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.line),
-              ),
+              decoration: AppDecor.card(radius: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
