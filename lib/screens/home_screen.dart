@@ -20,16 +20,12 @@ const _months = [
   'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
   'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
 ];
-const _monthsShort = ['JANV', 'FÉVR', 'MARS', 'AVR', 'MAI', 'JUIN', 'JUIL', 'AOÛT', 'SEPT', 'OCT', 'NOV', 'DÉC'];
 
 /// « Samedi 26 septembre »
 String frenchLongDate(DateTime d) {
   final day = _days[d.weekday - 1];
   return '${day[0].toUpperCase()}${day.substring(1)} ${d.day} ${_months[d.month - 1]}';
 }
-
-/// « SEPT »
-String frenchShortMonth(int month) => _monthsShort[month - 1];
 
 class HomeScreen extends StatelessWidget {
   final AppState appState;
@@ -100,9 +96,12 @@ class HomeScreen extends StatelessWidget {
         if (upcoming.isNotEmpty) ...[
           const SectionLabel('À venir'),
           for (final item in upcoming)
-            _UpcomingCard(
-              item: item,
-              relative: appState.relativeLabel(item.date),
+            DateCard(
+              date: DateTime.tryParse(item.date) ?? DateTime.now(),
+              icon: item.icon,
+              title: item.title,
+              subtitle: item.subtitle,
+              badge: appState.relativeLabel(item.date),
               onTap: item.birdRing != null
                   ? () => _open(context, BirdDetailScreen(appState: appState, ring: item.birdRing!))
                   : item.incubationId != null
@@ -254,69 +253,5 @@ class _QuickAction extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-/// Rendez-vous : la date en évidence dans un bloc teinté, et l'échéance.
-class _UpcomingCard extends StatelessWidget {
-  final AgendaItem item;
-  final String relative;
-  final VoidCallback? onTap;
-  const _UpcomingCard({required this.item, required this.relative, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final d = DateTime.tryParse(item.date) ?? DateTime.now();
-    final (bg, fg) = iconTint(item.icon);
-    final content = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 52,
-            decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('${d.day}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: fg, height: 1.1)),
-                Text(frenchShortMonth(d.month), style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: fg, letterSpacing: 0.6)),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(item.title, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: AppColors.navy)),
-                const SizedBox(height: 2),
-                Text(
-                  item.subtitle,
-                  style: const TextStyle(fontSize: 12.5, color: AppColors.mute),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(999)),
-            child: Text(relative, style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: fg)),
-          ),
-        ],
-      ),
-    );
-    final card = Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      decoration: AppDecor.card(radius: 20),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(borderRadius: BorderRadius.circular(20), onTap: onTap, child: content),
-      ),
-    );
-    return onTap == null ? card : PressableScale(child: card);
   }
 }

@@ -24,3 +24,8 @@ String formatDateTime(DateTime d) => '${formatDate(d)} ${_two(d.hour)}:${_two(d.
 /// Date ISO « 2026-09-25T08:30:00 » sans fuseau, pour l'enregistrement.
 String isoDateTime(DateTime d) =>
     '${d.year}-${_two(d.month)}-${_two(d.day)}T${_two(d.hour)}:${_two(d.minute)}:00';
+
+const List<String> _monthsShort = ['JANV', 'FÉVR', 'MARS', 'AVR', 'MAI', 'JUIN', 'JUIL', 'AOÛT', 'SEPT', 'OCT', 'NOV', 'DÉC'];
+
+/// « SEPT »
+String frenchShortMonth(int month) => _monthsShort[month - 1];

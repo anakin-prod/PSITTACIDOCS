@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../logic/inbreeding.dart';
 import '../models/couple.dart';
@@ -32,17 +33,6 @@ class _CoupleDetailScreenState extends State<CoupleDetailScreen> {
     _initialized = true;
   }
 
-  String _label(String? ring, String? fallback) {
-    if (ring != null) {
-      final b = widget.appState.findBird(ring);
-      if (b != null) {
-        final sp = widget.appState.speciesBySci(b.sci);
-        return '${b.ring} · ${sp?.label ?? b.sci}';
-      }
-    }
-    return fallback ?? '—';
-  }
-
   Future<void> _advance(Couple c) async {
     c.eggs = int.tryParse(_eggsCtrl.text.trim()) ?? c.eggs;
     c.chicks = int.tryParse(_chicksCtrl.text.trim()) ?? c.chicks;
@@ -51,6 +41,44 @@ class _CoupleDetailScreenState extends State<CoupleDetailScreen> {
     }
     await widget.appState.advanceCouple(c);
     setState(() => _initialized = false);
+  }
+
+  Widget _parentTile({required bool male, required String? ring, required String? fallback}) {
+    final exists = ring != null && widget.appState.findBird(ring) != null;
+    final sp = exists ? widget.appState.speciesBySci(widget.appState.findBird(ring)!.sci) : null;
+    return Material(
+      color: male ? const Color(0xFFF3F6FD) : const Color(0xFFFDF1F2),
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: exists
+            ? () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => BirdDetailScreen(appState: widget.appState, ring: ring)),
+              )
+            : null,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(male ? Icons.male_rounded : Icons.female_rounded, size: 16, color: male ? AppColors.maleFg : AppColors.femaleFg),
+                  const SizedBox(width: 4),
+                  Text(
+                    male ? 'MÂLE' : 'FEMELLE',
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.6, color: male ? AppColors.maleFg : AppColors.femaleFg),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(ring ?? fallback ?? '—', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.navy)),
+              if (sp != null) Text(sp.label, style: const TextStyle(fontSize: 11.5, color: AppColors.mute), overflow: TextOverflow.ellipsis),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -69,36 +97,45 @@ class _CoupleDetailScreenState extends State<CoupleDetailScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Fiche couple')),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(18, 8, 18, 24),
         children: [
-          Text(c.id, style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: 12),
-          InfoCard(
-            leading: const Icon(Icons.male, color: Colors.blue),
-            title: _label(c.maleRing, c.maleLabel),
-            subtitle: 'Mâle',
-            onTap: c.maleRing == null
-                ? null
-                : () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => BirdDetailScreen(appState: widget.appState, ring: c.maleRing!),
+          // Carte d'identité du couple : numéro, espèce, étape, les deux parents.
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: AppDecor.card(radius: 26),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(c.id, style: GoogleFonts.lora(fontSize: 28, fontWeight: FontWeight.w600, color: AppColors.navy)),
+                          Text(
+                            widget.appState.speciesBySci(c.sci)?.label ?? c.sci,
+                            style: const TextStyle(fontSize: 14, color: AppColors.mute),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                    Tag(c.stageName, tone: TagTone.bronze),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Expanded(child: _parentTile(male: true, ring: c.maleRing, fallback: c.maleLabel)),
+                    const SizedBox(width: 10),
+                    Expanded(child: _parentTile(male: false, ring: c.femaleRing, fallback: c.femaleLabel)),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                StageBar(stage: c.stage),
+              ],
+            ),
           ),
-          InfoCard(
-            leading: const Icon(Icons.female, color: Colors.pink),
-            title: _label(c.femaleRing, c.femaleLabel),
-            subtitle: 'Femelle',
-            onTap: c.femaleRing == null
-                ? null
-                : () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => BirdDetailScreen(appState: widget.appState, ring: c.femaleRing!),
-                    ),
-                  ),
-          ),
-          const SizedBox(height: 6),
-          StageBar(stage: c.stage),
           if (c.maleRing != null && c.femaleRing != null) ...[
             const SectionLabel('Consanguinité attendue des jeunes'),
             Builder(builder: (context) {

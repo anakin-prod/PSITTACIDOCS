@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../logic/format.dart';
 import '../models/bird.dart';
 import '../models/species.dart';
 import '../theme/app_theme.dart';
@@ -418,6 +419,82 @@ class InfoCard extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(borderRadius: BorderRadius.circular(20), onTap: onTap, child: content),
             ),
+    );
+    return onTap == null ? card : PressableScale(child: card);
+  }
+}
+
+/// Carte d'échéance : la date en évidence dans un bloc teinté (selon le type
+/// d'événement), un titre, un sous-titre et une pastille d'échéance.
+class DateCard extends StatelessWidget {
+  final DateTime date;
+  final String icon;
+  final String title;
+  final String subtitle;
+  final String? badge;
+  final VoidCallback? onTap;
+  final Widget? trailing;
+
+  const DateCard({
+    super.key,
+    required this.date,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    this.badge,
+    this.onTap,
+    this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final (bg, fg) = iconTint(icon);
+    final content = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 52,
+            decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('${date.day}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: fg, height: 1.1)),
+                Text(frenchShortMonth(date.month), style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: fg, letterSpacing: 0.6)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: AppColors.navy)),
+                const SizedBox(height: 2),
+                Text(subtitle, style: const TextStyle(fontSize: 12.5, color: AppColors.mute), maxLines: 2, overflow: TextOverflow.ellipsis),
+              ],
+            ),
+          ),
+          if (badge != null) ...[
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(999)),
+              child: Text(badge!, style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: fg)),
+            ),
+          ],
+          if (trailing != null) trailing!,
+        ],
+      ),
+    );
+    final card = Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: AppDecor.card(radius: 20),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(borderRadius: BorderRadius.circular(20), onTap: onTap, child: content),
+      ),
     );
     return onTap == null ? card : PressableScale(child: card);
   }
