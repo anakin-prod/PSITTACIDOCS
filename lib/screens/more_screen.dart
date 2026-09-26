@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../logic/pdf_export.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_icons.dart';
@@ -13,6 +14,7 @@ import 'incubations_screen.dart';
 import 'settings_screen.dart';
 import 'species_screen.dart';
 import 'stats_screen.dart';
+import '../widgets/animations.dart';
 
 class MoreScreen extends StatelessWidget {
   final AppState appState;
@@ -39,7 +41,7 @@ class MoreScreen extends StatelessWidget {
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-        children: [
+        children: staggered([
           Text('Plus', style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 12),
           InfoCard(
@@ -96,6 +98,20 @@ class MoreScreen extends StatelessWidget {
             ),
           ),
           InfoCard(
+            leading: _menuIcon('pdf'),
+            title: 'Inventaire de l’élevage (PDF)',
+            subtitle: 'Tous tes oiseaux dans un tableau à partager ou imprimer',
+            trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
+            onTap: () async {
+              final messenger = ScaffoldMessenger.of(context);
+              try {
+                await shareInventory(appState);
+              } catch (e) {
+                messenger.showSnackBar(SnackBar(content: Text('Export PDF impossible : $e')));
+              }
+            },
+          ),
+          InfoCard(
             leading: _menuIcon('chart'),
             title: 'Statistiques',
             subtitle: 'Reproduction, jeunes, historique',
@@ -122,7 +138,7 @@ class MoreScreen extends StatelessWidget {
               MaterialPageRoute(builder: (_) => SettingsScreen(appState: appState)),
             ),
           ),
-        ],
+        ]),
       ),
     );
   }

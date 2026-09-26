@@ -7,6 +7,7 @@ import '../widgets/common.dart';
 import 'bird_detail_screen.dart';
 import 'incubation_detail_screen.dart';
 import 'new_event_screen.dart';
+import '../widgets/animations.dart';
 
 class AgendaScreen extends StatelessWidget {
   final AppState appState;
@@ -20,7 +21,7 @@ class AgendaScreen extends StatelessWidget {
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-        children: [
+        children: staggered([
           Row(
             children: [
               Expanded(
@@ -109,7 +110,7 @@ class AgendaScreen extends StatelessWidget {
                 ],
               ),
             ),
-        ],
+        ]),
       ),
     );
   }

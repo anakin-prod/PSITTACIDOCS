@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/animations.dart';
 
 class StatsScreen extends StatelessWidget {
   final AppState appState;
@@ -32,20 +33,20 @@ class StatsScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Statistiques')),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: [
+        children: staggered([
           Row(
             children: [
-              Expanded(child: StatCard(label: 'Oiseaux', value: '$total', dark: true)),
+              Expanded(child: StatCard(label: 'Oiseaux', count: total, dark: true)),
               const SizedBox(width: 10),
-              Expanded(child: StatCard(label: 'Espèces', value: '$speciesCount')),
+              Expanded(child: StatCard(label: 'Espèces', count: speciesCount)),
             ],
           ),
           const SizedBox(height: 10),
           Row(
             children: [
-              Expanded(child: StatCard(label: 'Couples actifs', value: '${appState.couples.length}')),
+              Expanded(child: StatCard(label: 'Couples actifs', count: appState.couples.length)),
               const SizedBox(width: 10),
-              Expanded(child: StatCard(label: 'Cessions', value: '$cessionsCount')),
+              Expanded(child: StatCard(label: 'Cessions', count: cessionsCount)),
             ],
           ),
           const SectionLabel('Répartition par sexe'),
@@ -93,17 +94,7 @@ class StatsScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 6),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(3),
-                    child: SizedBox(
-                      height: 6,
-                      child: LinearProgressIndicator(
-                        value: pct(e.value),
-                        backgroundColor: const Color(0xFFF2DCDA),
-                        color: AppColors.bronze,
-                      ),
-                    ),
-                  ),
+                  AnimatedBar(value: pct(e.value)),
                 ],
               ),
             ),
@@ -113,12 +104,12 @@ class StatsScreen extends StatelessWidget {
           const SectionLabel('Reproduction'),
           Row(
             children: [
-              Expanded(child: StatCard(label: 'Sevrages enregistrés', value: '$sevrages')),
+              Expanded(child: StatCard(label: 'Sevrages enregistrés', count: sevrages)),
               const SizedBox(width: 10),
-              Expanded(child: StatCard(label: 'Poussins en cours', value: '$chicksNow')),
+              Expanded(child: StatCard(label: 'Poussins en cours', count: chicksNow)),
             ],
           ),
-        ],
+        ]),
       ),
     );
   }

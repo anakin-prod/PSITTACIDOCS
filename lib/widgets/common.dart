@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../models/bird.dart';
 import '../models/species.dart';
 import '../theme/app_theme.dart';
+import 'animations.dart';
 
 /// Un petit titre de section, dans le style bronze utilisé partout dans
 /// l'appli (ex. "Documents", "Santé", "Parents").
@@ -32,7 +33,9 @@ class StatCard extends StatelessWidget {
   final String label;
   final String value;
   final bool dark;
-  const StatCard({super.key, required this.label, required this.value, this.dark = false});
+  /// Si renseigné, le nombre défile jusqu'à sa valeur (remplace [value]).
+  final int? count;
+  const StatCard({super.key, required this.label, this.value = '', this.dark = false, this.count});
 
   @override
   Widget build(BuildContext context) => Container(
@@ -53,14 +56,24 @@ class StatCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-            color: dark ? Colors.white : AppColors.navy,
+        if (count != null)
+          AnimatedCount(
+            value: count!,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: dark ? Colors.white : AppColors.navy,
+            ),
+          )
+        else
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: dark ? Colors.white : AppColors.navy,
+            ),
           ),
-        ),
       ],
     ),
   );
@@ -129,10 +142,12 @@ class InfoCard extends StatelessWidget {
       ),
     );
     if (onTap == null) return card;
-    return InkWell(
-      borderRadius: BorderRadius.circular(14),
-      onTap: onTap,
-      child: card,
+    return PressableScale(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: card,
+      ),
     );
   }
 }

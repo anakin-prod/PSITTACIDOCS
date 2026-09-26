@@ -5,10 +5,11 @@ import '../models/breeding.dart';
 import '../models/species.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
-import '../widgets/app_icons.dart';
 import '../widgets/common.dart';
+import '../widgets/incubation_egg.dart';
 import 'incubation_detail_screen.dart';
 import 'species_picker_screen.dart';
+import '../widgets/animations.dart';
 
 /// Liste des incubations (en cours puis terminées).
 class IncubationsScreen extends StatefulWidget {
@@ -32,10 +33,12 @@ class _IncubationsScreenState extends State<IncubationsScreen> {
           ? 'Jour ${inc.dayNumber} sur ${inc.incubationDays} · éclosion prévue le ${formatDate(inc.expectedHatch)}'
           : 'Terminée · ${inc.hatched} éclos sur ${inc.eggs} œuf${inc.eggs > 1 ? 's' : ''}';
       return InfoCard(
-        leading: CircleAvatar(
-          radius: 18,
-          backgroundColor: inc.isActive ? AppColors.navy : AppColors.mute,
-          child: Icon(iconFor('egg'), color: Colors.white, size: 18),
+        leading: IncubationEgg(
+          width: 30,
+          progress: inc.isActive && inc.incubationDays > 0 ? inc.dayNumber / inc.incubationDays : 1.0,
+          wobble: inc.isActive && inc.incubationDays > 0 && inc.dayNumber / inc.incubationDays >= 0.9,
+          hatched: !inc.isActive && inc.hatched > 0,
+          dimmed: !inc.isActive && inc.hatched == 0,
         ),
         title: '${inc.label}${sp != null ? ' · ${sp.label}' : ''}',
         subtitle: subtitle,
@@ -67,7 +70,7 @@ class _IncubationsScreenState extends State<IncubationsScreen> {
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: [
+        children: staggered([
           const SectionLabel('En cours'),
           if (active.isEmpty) const EmptyHint('Aucune incubation en cours. Touche + pour en démarrer une.'),
           for (final i in active) tile(i),
@@ -75,7 +78,7 @@ class _IncubationsScreenState extends State<IncubationsScreen> {
             const SectionLabel('Terminées'),
             for (final i in done) tile(i),
           ],
-        ],
+        ]),
       ),
     );
   }

@@ -4,6 +4,7 @@ import '../logic/inbreeding.dart';
 import '../models/couple.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
+import '../widgets/animations.dart';
 import '../widgets/app_icons.dart';
 import '../widgets/common.dart';
 import 'bird_detail_screen.dart';
@@ -97,21 +98,7 @@ class _CoupleDetailScreenState extends State<CoupleDetailScreen> {
                   ),
           ),
           const SizedBox(height: 6),
-          Row(
-            children: List.generate(6, (i) {
-              final filled = i <= c.stage;
-              return Expanded(
-                child: Container(
-                  height: 6,
-                  margin: EdgeInsets.only(right: i < 5 ? 4 : 0),
-                  decoration: BoxDecoration(
-                    color: filled ? AppColors.bronze : AppColors.line,
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-              );
-            }),
-          ),
+          StageBar(stage: c.stage),
           if (c.maleRing != null && c.femaleRing != null) ...[
             const SectionLabel('Consanguinité attendue des jeunes'),
             Builder(builder: (context) {

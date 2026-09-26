@@ -5,7 +5,10 @@ import '../models/breeding.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_icons.dart';
+import '../widgets/animations.dart';
 import '../widgets/common.dart';
+import '../widgets/gauges.dart';
+import '../widgets/incubation_egg.dart';
 import '../widgets/mini_chart.dart';
 
 class IncubationDetailScreen extends StatefulWidget {
@@ -114,28 +117,117 @@ class _IncubationDetailScreenState extends State<IncubationDetailScreen> {
           if (sp != null)
             Text(sp.label, style: const TextStyle(color: AppColors.mute)),
           const SizedBox(height: 12),
-          if (inc.isActive) ...[
-            Text(
-              'Jour ${inc.dayNumber} sur ${inc.incubationDays}',
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 6),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: progress,
-                minHeight: 8,
-                backgroundColor: AppColors.line,
-                color: AppColors.bronze,
+          // Panneau principal : l'œuf se remplit au fil des jours et tremble à
+          // l'approche de l'éclosion ; une petite rangée montre chaque œuf.
+          FadeSlideIn(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.line),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      IncubationEgg(
+                        width: 72,
+                        interactive: true,
+                        progress: inc.isActive ? progress : 1.0,
+                        wobble: inc.isActive && progress >= 0.9,
+                        hatched: !inc.isActive && inc.hatched > 0,
+                        dimmed: !inc.isActive && inc.hatched == 0,
+                      ),
+                      const SizedBox(width: 18),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (inc.isActive) ...[
+                              Text(
+                                'Jour ${inc.dayNumber} sur ${inc.incubationDays}',
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.navy),
+                              ),
+                              const SizedBox(height: 8),
+                              AnimatedBar(value: progress, height: 8),
+                              const SizedBox(height: 8),
+                              Text(
+                                progress >= 0.9
+                                    ? 'Éclosion imminente : ${appState.relativeLabel(inc.expectedHatch.toIso8601String().substring(0, 10)).toLowerCase()}'
+                                    : 'Éclosion prévue le ${formatDate(inc.expectedHatch)}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: progress >= 0.9 ? AppColors.bronzeDark : AppColors.mute,
+                                  fontWeight: progress >= 0.9 ? FontWeight.w600 : FontWeight.w400,
+                                ),
+                              ),
+                            ] else ...[
+                              const Text(
+                                'Incubation terminée',
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.navy),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                '${inc.hatched} éclos sur ${inc.eggs} œuf${inc.eggs > 1 ? 's' : ''}',
+                                style: const TextStyle(fontSize: 13, color: AppColors.mute),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (inc.eggs > 0) ...[
+                    const SizedBox(height: 14),
+                    EggRow(eggs: inc.eggs, progress: progress, finished: !inc.isActive, hatched: inc.hatched),
+                  ],
+                ],
               ),
             ),
-            const SizedBox(height: 6),
-            Text(
-              'Éclosion prévue le ${formatDate(inc.expectedHatch)} · ${appState.relativeLabel(inc.expectedHatch.toIso8601String().substring(0, 10))}',
-              style: const TextStyle(fontSize: 12, color: AppColors.mute),
+          ),
+          // Dernier relevé : thermomètre et goutte colorés selon la consigne
+          // (bleu en dessous, rouge au-dessus, vert dans la plage).
+          if (last != null && (last.temperature != null || last.humidity != null))
+            FadeSlideIn(
+              delay: const Duration(milliseconds: 120),
+              child: Container(
+                margin: const EdgeInsets.only(top: 12),
+                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.line),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      'Dernier relevé · ${formatDateTime(DateTime.parse(last.date))}',
+                      style: const TextStyle(fontSize: 12, color: AppColors.mute),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ThermometerGauge(
+                          key: ValueKey('t-${last.id}'),
+                          value: last.temperature,
+                          min: 30,
+                          max: 40,
+                          colorFor: (v) => targetColor(v, inc.targetTempMin, inc.targetTempMax),
+                        ),
+                        HumidityGauge(
+                          key: ValueKey('h-${last.id}'),
+                          value: last.humidity,
+                          colorFor: (v) => targetColor(v, inc.targetHumMin, inc.targetHumMax),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ] else
-            InfoBanner('Incubation terminée : ${inc.hatched} éclos sur ${inc.eggs} œuf${inc.eggs > 1 ? 's' : ''}.'),
           for (final a in alerts) InfoBanner(a, warning: true),
           const SectionLabel('Consignes'),
           Text('Température : ${_range(inc.targetTempMin, inc.targetTempMax, '°C')}', style: const TextStyle(fontSize: 13)),

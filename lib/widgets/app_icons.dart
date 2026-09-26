@@ -49,6 +49,8 @@ IconData iconFor(String name) {
       return Icons.science_outlined;
     case 'idea':
       return Icons.lightbulb_outline;
+    case 'pdf':
+      return Icons.picture_as_pdf_outlined;
     default:
       return Icons.circle_outlined;
   }

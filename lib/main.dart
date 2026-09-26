@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'screens/agenda_screen.dart';
 import 'screens/birds_screen.dart';
 import 'screens/couples_screen.dart';
+import 'screens/global_search_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/more_screen.dart';
 import 'screens/notifications_screen.dart';
@@ -130,6 +132,13 @@ class _HomeShellState extends State<HomeShell> {
           ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            tooltip: 'Rechercher',
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => GlobalSearchScreen(appState: appState)),
+            ),
+          ),
           Stack(
             clipBehavior: Clip.none,
             children: [
@@ -163,16 +172,27 @@ class _HomeShellState extends State<HomeShell> {
         ],
       ),
       body: IndexedStack(index: _tab, children: screens),
-      bottomNavigationBar: BottomNavigationBar(
+      // Marges latérales : les libellés du menu restent à l'écart des coins
+      // arrondis du cadre (le « A » d'« Accueil » n'est plus rogné).
+      bottomNavigationBar: Container(
+        color: AppColors.navy,
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: BottomNavigationBar(
+        elevation: 0,
+        backgroundColor: AppColors.navy,
         currentIndex: _tab,
-        onTap: (i) => setState(() => _tab = i),
+        onTap: (i) {
+          if (i != _tab) HapticFeedback.selectionClick();
+          setState(() => _tab = i);
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.grid_view_rounded),
             label: 'Accueil',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.flutter_dash),
+            // Silhouette du perroquet du logo.
+            icon: ImageIcon(AssetImage('assets/images/nav_parrot.png')),
             label: 'Oiseaux',
           ),
           BottomNavigationBarItem(
@@ -188,6 +208,7 @@ class _HomeShellState extends State<HomeShell> {
             label: 'Plus',
           ),
         ],
+      ),
       ),
     );
   }

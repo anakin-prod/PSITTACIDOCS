@@ -16,6 +16,9 @@ dependencies:
   url_launcher: ^6.2.6
   image_picker: ^1.1.2
   file_picker: ^13.1.0
+  pdf: ^3.11.1
+  share_plus: ^13.2.1
+  cross_file: ^0.3.4
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +34,9 @@ flutter:
     - assets/data/parrot_facts.json
     - assets/images/icon.png
     - assets/images/splash_parrot.png
+    - assets/images/nav_parrot.png
+    - assets/fonts/Poppins-Regular.ttf
+    - assets/fonts/Poppins-Bold.ttf
     - assets/images/logo_horizontal.png
     - assets/images/logo_vertical.png
 

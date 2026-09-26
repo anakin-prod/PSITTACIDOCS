@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../logic/genetics.dart';
 import '../logic/inbreeding.dart' show formatPercent;
 import '../theme/app_theme.dart';
+import '../widgets/animations.dart';
 import '../widgets/common.dart';
 
 /// Calculateur génétique en mode libre : l'éleveur saisit chaque mutation,
@@ -134,16 +135,23 @@ class _GeneticsScreenState extends State<GeneticsScreen> {
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppColors.line),
           ),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                width: 64,
-                child: Text(
-                  formatPercent(o.probability),
-                  style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.navy),
-                ),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 64,
+                    child: Text(
+                      formatPercent(o.probability),
+                      style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.navy),
+                    ),
+                  ),
+                  Expanded(child: Text(o.label, style: const TextStyle(fontSize: 13))),
+                ],
               ),
-              Expanded(child: Text(o.label, style: const TextStyle(fontSize: 13))),
+              const SizedBox(height: 6),
+              AnimatedBar(value: o.probability, height: 5),
             ],
           ),
         ),

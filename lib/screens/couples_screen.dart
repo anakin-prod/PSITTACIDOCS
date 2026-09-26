@@ -5,6 +5,7 @@ import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import 'couple_detail_screen.dart';
 import 'new_couple_screen.dart';
+import '../widgets/animations.dart';
 
 class CouplesScreen extends StatelessWidget {
   final AppState appState;
@@ -15,7 +16,7 @@ class CouplesScreen extends StatelessWidget {
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-        children: [
+        children: staggered([
           Row(
             children: [
               Expanded(
@@ -41,7 +42,7 @@ class CouplesScreen extends StatelessWidget {
               child: Text('Aucun couple pour l’instant.', style: TextStyle(color: AppColors.mute)),
             ),
           for (final c in appState.couples) _CoupleCard(appState: appState, couple: c),
-        ],
+        ]),
       ),
     );
   }
@@ -100,21 +101,7 @@ class _CoupleCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            Row(
-              children: List.generate(6, (i) {
-                final filled = i <= couple.stage;
-                return Expanded(
-                  child: Container(
-                    height: 5,
-                    margin: EdgeInsets.only(right: i < 5 ? 4 : 0),
-                    decoration: BoxDecoration(
-                      color: filled ? AppColors.bronze : AppColors.line,
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                  ),
-                );
-              }),
-            ),
+            StageBar(stage: couple.stage),
             const SizedBox(height: 6),
             Text(detail, style: const TextStyle(fontSize: 12, color: AppColors.mute)),
           ],

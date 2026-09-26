@@ -99,7 +99,7 @@ _Split _offspring(GeneInput g) {
   final daughters = <int, double>{};
   final p = g.father.clamp(0, 2) / 2; // probabilité que le père transmette la mutation
   if (g.mode == InheritanceMode.sexLinkedRecessive) {
-    final cm = g.mother.clamp(0, 1); // la mère n'a qu'un chromosome Z
+    final cm = g.mother.clamp(0, 1).toInt(); // la mère n'a qu'un chromosome Z
     // Fils : Z du père + Z de la mère.
     _add(sons, cm, 1 - p);
     _add(sons, cm + 1, p);

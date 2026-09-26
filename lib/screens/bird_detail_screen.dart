@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../logic/inbreeding.dart';
+import '../logic/pdf_export.dart';
 import '../models/bird.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
@@ -10,6 +11,7 @@ import '../widgets/common.dart';
 import 'edit_bird_screen.dart';
 import 'genealogy_screen.dart';
 import 'new_health_entry_screen.dart';
+import '../widgets/animations.dart';
 
 String formatIso(String? iso) {
   if (iso == null || iso.isEmpty) return '';
@@ -39,6 +41,15 @@ class _BirdDetailScreenState extends State<BirdDetailScreen> {
     _ring = widget.ring;
   }
 
+  Future<void> _exportPdf(Bird bird) async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await shareBirdSheet(widget.appState, bird);
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text('Export PDF impossible : $e')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final appState = widget.appState;
@@ -54,10 +65,19 @@ class _BirdDetailScreenState extends State<BirdDetailScreen> {
     final weighings = bird.weighingsSortedAsc;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Fiche oiseau')),
+      appBar: AppBar(
+        title: const Text('Fiche oiseau'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.picture_as_pdf_outlined),
+            tooltip: 'Exporter la fiche en PDF',
+            onPressed: () => _exportPdf(bird),
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-        children: [
+        children: staggered([
           Row(
             children: [
               BirdAvatar(bird: bird, species: sp, size: 56),
@@ -232,7 +252,7 @@ class _BirdDetailScreenState extends State<BirdDetailScreen> {
             const SectionLabel('Notes'),
             Text(bird.notes, style: const TextStyle(fontSize: 13)),
           ],
-        ],
+        ]),
       ),
     );
   }

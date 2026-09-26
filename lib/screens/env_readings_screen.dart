@@ -6,7 +6,9 @@ import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_icons.dart';
 import '../widgets/common.dart';
+import '../widgets/gauges.dart';
 import '../widgets/mini_chart.dart';
+import '../widgets/animations.dart';
 
 /// Relevés de température, d'humidité et d'éclairage des volières.
 class EnvReadingsScreen extends StatefulWidget {
@@ -66,7 +68,7 @@ class _EnvReadingsScreenState extends State<EnvReadingsScreen> {
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: [
+        children: staggered([
           SizedBox(
             height: 36,
             child: ListView(
@@ -93,6 +95,37 @@ class _EnvReadingsScreenState extends State<EnvReadingsScreen> {
             ),
           ),
           const SizedBox(height: 12),
+          // Dernier relevé en jauges animées : thermomètre (bleu → rouge selon la
+          // température), goutte d'humidité, soleil pour la durée d'éclairage.
+          if (filtered.isNotEmpty)
+            Container(
+              key: ValueKey('last-${filtered.first.id}'),
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.line),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'Dernier relevé · ${filtered.first.location} · ${formatDateTime(DateTime.parse(filtered.first.date))}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 12, color: AppColors.mute),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ThermometerGauge(value: filtered.first.temperature),
+                      HumidityGauge(value: filtered.first.humidity),
+                      LightGauge(hours: filtered.first.lightHours),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           if (_location == null && filtered.isNotEmpty)
             const InfoBanner('Choisis une volière pour afficher ses courbes.'),
           if (_location != null) ...[
@@ -107,7 +140,7 @@ class _EnvReadingsScreenState extends State<EnvReadingsScreen> {
             InfoCard(
               leading: CircleAvatar(
                 radius: 18,
-                backgroundColor: AppColors.navy,
+                backgroundColor: r.temperature == null ? AppColors.navy : ambientTemperatureColor(r.temperature!),
                 child: Icon(iconFor('thermo'), color: Colors.white, size: 18),
               ),
               title: _summary(r),
@@ -129,7 +162,7 @@ class _EnvReadingsScreenState extends State<EnvReadingsScreen> {
                 },
               ),
             ),
-        ],
+        ]),
       ),
     );
   }

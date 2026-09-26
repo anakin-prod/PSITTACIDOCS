@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../state/app_state.dart';
+import '../widgets/animations.dart';
 import '../widgets/common.dart';
 import 'add_bird_screen.dart';
 import 'bird_detail_screen.dart';
@@ -50,7 +51,7 @@ class _BirdsScreenState extends State<BirdsScreen> {
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-        children: [
+        children: staggered([
           Row(
             children: [
               Expanded(
@@ -122,7 +123,7 @@ class _BirdsScreenState extends State<BirdsScreen> {
                 ),
               ),
             ),
-        ],
+        ]),
       ),
     );
   }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../logic/text_search.dart';
 import '../models/parrot_fact.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_icons.dart';
 import 'species_detail_screen.dart';
+import '../widgets/animations.dart';
 
 /// Petite étiquette de thème (« Anatomie », « Reproduction »…).
 class _ThemeTag extends StatelessWidget {
@@ -57,9 +59,25 @@ class PsittacopedieCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Text(fact.text, style: const TextStyle(fontSize: 14, height: 1.4, color: AppColors.navy)),
-          const SizedBox(height: 8),
-          Text('Source : ${fact.source}', style: const TextStyle(fontSize: 11, color: AppColors.mute)),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 380),
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position: Tween<Offset>(begin: const Offset(0.06, 0), end: Offset.zero).animate(animation),
+                child: child,
+              ),
+            ),
+            child: Column(
+              key: ValueKey(fact.id),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(fact.text, style: const TextStyle(fontSize: 14, height: 1.4, color: AppColors.navy)),
+                const SizedBox(height: 8),
+                Text('Source : ${fact.source}', style: const TextStyle(fontSize: 11, color: AppColors.mute)),
+              ],
+            ),
+          ),
           Wrap(
             spacing: 4,
             children: [
@@ -92,7 +110,8 @@ class PsittacopedieCard extends StatelessWidget {
 /// Toutes les informations de la Psittacopédie, par thème, avec recherche.
 class PsittacopedieScreen extends StatefulWidget {
   final AppState appState;
-  const PsittacopedieScreen({super.key, required this.appState});
+  final String? initialQuery; // recherche pré-remplie (depuis la recherche globale)
+  const PsittacopedieScreen({super.key, required this.appState, this.initialQuery});
 
   @override
   State<PsittacopedieScreen> createState() => _PsittacopedieScreenState();
@@ -101,6 +120,12 @@ class PsittacopedieScreen extends StatefulWidget {
 class _PsittacopedieScreenState extends State<PsittacopedieScreen> {
   final _ctrl = TextEditingController();
   String _theme = 'Tous';
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl.text = widget.initialQuery ?? '';
+  }
 
   @override
   void dispose() {
@@ -112,19 +137,19 @@ class _PsittacopedieScreenState extends State<PsittacopedieScreen> {
   Widget build(BuildContext context) {
     final appState = widget.appState;
     final themes = ['Tous', ...{for (final f in appState.facts) f.theme}];
-    final q = _ctrl.text.trim().toLowerCase();
+    final q = normalizeText(_ctrl.text.trim());
     final list = appState.facts.where((f) {
       if (_theme != 'Tous' && f.theme != _theme) return false;
       if (q.isEmpty) return true;
       final sp = f.sci == null ? null : appState.speciesBySci(f.sci!);
-      return f.text.toLowerCase().contains(q) || (sp?.label.toLowerCase().contains(q) ?? false);
+      return matchesAny(q, [f.text, f.theme, sp?.label]);
     }).toList();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Psittacopédie')),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: [
+        children: staggered([
           TextField(
             controller: _ctrl,
             onChanged: (_) => setState(() {}),
@@ -154,7 +179,7 @@ class _PsittacopedieScreenState extends State<PsittacopedieScreen> {
           ),
           const SizedBox(height: 8),
           for (final f in list) _FactTile(appState: appState, fact: f),
-        ],
+        ]),
       ),
     );
   }
