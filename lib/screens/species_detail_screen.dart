@@ -105,28 +105,6 @@ class SpeciesDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8),
               child: Text(s.note, style: const TextStyle(fontSize: 13)),
             ),
-          if (appState.factsFor(sci).isNotEmpty) ...[
-            const SectionLabel('Le saviez-vous ?'),
-            for (final f in appState.factsFor(sci))
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.line),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(f.text, style: const TextStyle(fontSize: 13, height: 1.4)),
-                    const SizedBox(height: 6),
-                    Text('Source : ${f.source}', style: const TextStyle(fontSize: 11, color: AppColors.mute)),
-                  ],
-                ),
-              ),
-          ],
           const SectionLabel('Dans votre élevage'),
           if (mine.isEmpty)
             const EmptyHint('Aucun oiseau de cette espèce dans votre élevage pour l’instant.'),

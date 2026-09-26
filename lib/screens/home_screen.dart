@@ -6,6 +6,7 @@ import '../widgets/app_icons.dart';
 import '../widgets/common.dart';
 import 'add_bird_screen.dart';
 import 'bird_detail_screen.dart';
+import 'psittacopedie_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final AppState appState;
@@ -61,6 +62,8 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 16),
+        PsittacopedieCard(appState: appState),
         if (upcoming.isNotEmpty) ...[
           const SectionLabel('À venir'),
           for (final item in upcoming)

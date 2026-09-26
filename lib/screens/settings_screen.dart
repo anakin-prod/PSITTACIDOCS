@@ -152,28 +152,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
-          const SectionLabel('Au démarrage'),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.line),
-            ),
-            child: SwitchListTile(
-              title: const Text('Afficher « Le saviez-vous ? » à chaque ouverture', style: TextStyle(fontSize: 13)),
-              value: settings.showFactOnLaunch,
-              onChanged: (v) {
-                setState(() => settings.showFactOnLaunch = v);
-                appState.saveSettings();
-              },
-            ),
-          ),
           const SectionLabel('À propos'),
           const InfoCard(
             leading: CircleAvatar(radius: 18, backgroundColor: AppColors.navy, child: Icon(Icons.eco, color: Colors.white, size: 18)),
             title: 'Psittacidocs',
-            subtitle: 'Version 1.1',
+            subtitle: 'Version 1.0',
           ),
         ],
       ),

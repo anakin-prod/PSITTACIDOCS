@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -70,13 +71,35 @@ class AppState extends ChangeNotifier {
   List<EnvReading> envReadings = [];
   List<Incubation> incubations = [];
   List<ParrotFact> facts = [];
+
+  // Psittacopédie : information affichée sur l'Accueil (tirée au hasard à
+  // chaque ouverture de l'appli, non enregistrée).
+  final Random _random = Random();
+  String? _currentFactId;
   int _seq = 1000;
 
   bool _loaded = false;
   bool get loaded => _loaded;
 
-  /// Informations « Le saviez-vous ? » concernant une espèce.
+  /// Informations de la Psittacopédie concernant une espèce.
   List<ParrotFact> factsFor(String sci) => facts.where((f) => f.sci == sci).toList();
+
+  /// Information de la Psittacopédie actuellement affichée sur l'Accueil.
+  ParrotFact? get currentFact {
+    for (final f in facts) {
+      if (f.id == _currentFactId) return f;
+    }
+    return facts.isEmpty ? null : facts.first;
+  }
+
+  /// Passe à une autre information, différente de l'actuelle si possible.
+  void nextFact() {
+    if (facts.isEmpty) return;
+    final pool = facts.where((f) => f.id != _currentFactId).toList();
+    final list = pool.isEmpty ? facts : pool;
+    _currentFactId = list[_random.nextInt(list.length)].id;
+    notifyListeners();
+  }
 
   Species? speciesBySci(String sci) {
     for (final s in species) {
@@ -126,6 +149,9 @@ class AppState extends ChangeNotifier {
           .toList();
     } catch (_) {
       facts = [];
+    }
+    if (facts.isNotEmpty) {
+      _currentFactId = facts[_random.nextInt(facts.length)].id;
     }
 
     final file = await _dataFile();

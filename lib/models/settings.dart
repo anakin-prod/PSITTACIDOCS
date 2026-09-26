@@ -7,7 +7,6 @@ class Settings {
   bool remindQuarantaine;
   bool remindVeto;
   bool remindNourrissage;
-  bool showFactOnLaunch; // afficher un « Le saviez-vous ? » à chaque ouverture
 
   Settings({
     this.elevageName = '',
@@ -17,7 +16,6 @@ class Settings {
     this.remindQuarantaine = true,
     this.remindVeto = true,
     this.remindNourrissage = false,
-    this.showFactOnLaunch = true,
   }) : volieres =
            volieres ??
            ['Volière 1', 'Volière 2', 'Volière 3', 'Nurserie', 'Quarantaine'];
@@ -49,7 +47,6 @@ class Settings {
     remindQuarantaine: json['remindQuarantaine'] as bool? ?? true,
     remindVeto: json['remindVeto'] as bool? ?? true,
     remindNourrissage: json['remindNourrissage'] as bool? ?? false,
-    showFactOnLaunch: json['showFactOnLaunch'] as bool? ?? true,
   );
 
   Map<String, dynamic> toJson() => {
@@ -60,6 +57,5 @@ class Settings {
     'remindQuarantaine': remindQuarantaine,
     'remindVeto': remindVeto,
     'remindNourrissage': remindNourrissage,
-    'showFactOnLaunch': showFactOnLaunch,
   };
 }

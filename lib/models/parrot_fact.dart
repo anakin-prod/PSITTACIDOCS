@@ -1,4 +1,4 @@
-/// Une information « Le saviez-vous ? » sur les perroquets, toujours sourcée.
+/// Une information de la Psittacopédie sur les perroquets, toujours sourcée.
 ///
 /// Chargées depuis assets/data/parrot_facts.json :
 ///   {"id": "f001", "theme": "Anatomie", "text": "…", "source": "…",

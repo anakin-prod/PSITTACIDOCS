@@ -5,8 +5,8 @@ import 'screens/birds_screen.dart';
 import 'screens/couples_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/more_screen.dart';
-import 'screens/facts_screen.dart';
 import 'screens/notifications_screen.dart';
+import 'screens/splash_view.dart';
 import 'state/app_state.dart';
 import 'theme/app_theme.dart';
 import 'widgets/app_frame.dart';
@@ -25,10 +25,17 @@ class PsittacidocsApp extends StatefulWidget {
 class _PsittacidocsAppState extends State<PsittacidocsApp> {
   final AppState appState = AppState();
 
+  /// Durée minimale d'affichage du logo à l'ouverture.
+  static const _minSplash = Duration(milliseconds: 1800);
+  bool _splashTimeElapsed = false;
+
   @override
   void initState() {
     super.initState();
     appState.load();
+    Future.delayed(_minSplash, () {
+      if (mounted) setState(() => _splashTimeElapsed = true);
+    });
   }
 
   @override
@@ -42,15 +49,14 @@ class _PsittacidocsAppState extends State<PsittacidocsApp> {
       home: AnimatedBuilder(
         animation: appState,
         builder: (context, _) {
-          if (!appState.loaded) {
-            return const Scaffold(
-              backgroundColor: AppColors.navy,
-              body: Center(
-                child: CircularProgressIndicator(color: Colors.white),
-              ),
-            );
-          }
-          return HomeShell(appState: appState);
+          final ready = appState.loaded && _splashTimeElapsed;
+          // Fondu entre l'écran du logo et l'appli.
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 450),
+            child: ready
+                ? HomeShell(key: const ValueKey('home'), appState: appState)
+                : const SplashView(key: ValueKey('splash')),
+          );
         },
       ),
     );
@@ -70,17 +76,6 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   int _tab = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    // Un « Le saviez-vous ? » à chaque ouverture de l'appli (désactivable).
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && widget.appState.settings.showFactOnLaunch) {
-        showFactDialog(context, widget.appState);
-      }
-    });
-  }
 
   static const _titles = [
     'Tableau de bord',
