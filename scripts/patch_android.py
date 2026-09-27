@@ -100,8 +100,29 @@ def patch_gradle() -> None:
 
     src = src[: match.start()] + block + src[match.start():]
     src = src.replace(old_line, new_line, 1)
+    src = force_target_sdk(src, path)
     path.write_text(src, encoding="utf-8")
     print(f"{path} : signature Codemagic configurée.")
+
+
+# Google Play exige que les applis ciblent une version récente d'Android.
+# On l'impose explicitement plutôt que de dépendre de la valeur par défaut de
+# Flutter, qui peut être en retard.
+TARGET_SDK = 36
+
+
+def force_target_sdk(src: str, path) -> str:
+    patterns = [
+        (r"targetSdk\s*=\s*[^\n]+", f"targetSdk = {TARGET_SDK}"),          # Kotlin DSL
+        (r"targetSdkVersion\s+[^\n]+", f"targetSdkVersion {TARGET_SDK}"),  # Groovy
+    ]
+    for pattern, replacement in patterns:
+        new_src, n = re.subn(pattern, replacement, src, count=1)
+        if n:
+            print(f"{path} : version Android ciblée fixée à l'API {TARGET_SDK}.")
+            return new_src
+    fail(f"réglage « targetSdk » introuvable dans {path} (modèle Flutter modifié ?).")
+    return src
 
 
 def patch_label() -> None:

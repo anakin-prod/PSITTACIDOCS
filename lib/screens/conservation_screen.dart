@@ -192,7 +192,7 @@ class ConservationScreen extends StatelessWidget {
             child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _keyFigure('570 000', 'Conures à front orange capturées illégalement en 25 ans (jusqu’en 2019)', 'BirdLife International, 2021'),
+              _keyFigure('570 000', 'Conures à front rouge capturées illégalement en 25 ans (jusqu’en 2019)', 'BirdLife International, 2021'),
               const SizedBox(width: 10),
               _keyFigure('+ de 50 %', 'des perroquets d’Amérique latine et des Caraïbes sont quasi menacés, menacés ou éteints', 'BirdLife International, 2021'),
             ],
