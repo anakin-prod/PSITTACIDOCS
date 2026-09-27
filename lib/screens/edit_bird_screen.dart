@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -226,20 +227,38 @@ class _EditBirdScreenState extends State<EditBirdScreen> {
     );
   }
 
-  Widget _box(String title, List<Widget> children) => Container(
-    width: double.infinity,
-    margin: const EdgeInsets.only(bottom: 12),
-    padding: const EdgeInsets.all(14),
-    decoration: AppDecor.card(radius: 20),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.navy)),
-        const SizedBox(height: 10),
-        ...children,
-      ],
-    ),
-  );
+  Widget _box(String title, List<Widget> children) {
+    const icons = {
+      'Espèce': 'book',
+      'Photo': 'cam',
+      'Bague': 'shield',
+      'Sexe': 'couple',
+      'Description': 'leaf',
+      'Origine': 'tree',
+      'Au quotidien': 'calendar',
+      'Notes': 'doc',
+    };
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: AppDecor.card(radius: 22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              IconTile(name: icons[title] ?? 'doc', size: 32),
+              const SizedBox(width: 10),
+              Text(title, style: GoogleFonts.lora(fontSize: 17, fontWeight: FontWeight.w600, color: AppColors.navy)),
+            ],
+          ),
+          const SizedBox(height: 14),
+          ...children,
+        ],
+      ),
+    );
+  }
 
   Widget _segmented(
     List<String> values,
@@ -247,18 +266,16 @@ class _EditBirdScreenState extends State<EditBirdScreen> {
     ValueChanged<String> onChanged, {
     Map<String, String>? labels,
   }) {
-    return Row(
+    // Pastilles qui passent à la ligne si besoin (pas de texte rogné).
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
       children: [
         for (final v in values)
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 6),
-              child: PillChoice(
-                label: Text(labels?[v] ?? v),
-                selected: current == v,
-                onSelected: (_) => onChanged(v),
-              ),
-            ),
+          PillChoice(
+            label: Text(labels?[v] ?? v),
+            selected: current == v,
+            onSelected: (_) => onChanged(v),
           ),
       ],
     );

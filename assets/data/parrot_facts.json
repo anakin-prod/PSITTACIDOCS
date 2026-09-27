@@ -496,5 +496,566 @@
   "text": "La Conure soleil mesure environ 30 cm pour 120 à 130 g.",
   "source": "World Parrot Trust, encyclopédie, « Sun Conure »",
   "sci": "Aratinga solstitialis"
+ },
+ {
+  "id": "f074",
+  "theme": "Conservation",
+  "text": "L'Ara de Spix a été déclaré éteint à l'état sauvage en 2019, exactement 200 ans après sa description scientifique par le naturaliste Johann Baptist von Spix.",
+  "source": "Science (AAAS), « Two decades after it vanished, the stunning Spix's macaw returns to its forest home », 2022",
+  "sci": "Cyanopsitta spixii"
+ },
+ {
+  "id": "f075",
+  "theme": "Conservation",
+  "text": "Grâce à l'élevage en captivité, la population d'Aras de Spix est passée d'environ 55 oiseaux en 2000 à 261.",
+  "source": "BirdGuides, « Spix's Macaw returns to wild », 2022",
+  "sci": "Cyanopsitta spixii"
+ },
+ {
+  "id": "f076",
+  "theme": "Conservation",
+  "text": "En juin 2022, huit Aras de Spix nés en captivité ont été relâchés dans leur milieu d'origine, la caatinga du nord-est du Brésil : un premier retour à la nature après plus de vingt ans.",
+  "source": "BirdGuides, « Spix's Macaw returns to wild », 2022",
+  "sci": "Cyanopsitta spixii"
+ },
+ {
+  "id": "f077",
+  "theme": "Reproduction",
+  "text": "À l'état sauvage, l'Ara de Spix nichait dans les cavités de grands arbres appelés caraibeiras, qui poussent le long des cours d'eau de la forêt sèche brésilienne.",
+  "source": "Science (AAAS), « Two decades after it vanished, the stunning Spix's macaw returns to its forest home », 2022",
+  "sci": "Cyanopsitta spixii"
+ },
+ {
+  "id": "f078",
+  "theme": "Espèces remarquables",
+  "text": "L'Ara hyacinthe est le plus grand de tous les perroquets : environ 1 m de long, dont la moitié pour la queue, et près de 1,6 kg.",
+  "source": "SeaWorld, fiche « Hyacinth Macaw »",
+  "sci": "Anodorhynchus hyacinthinus"
+ },
+ {
+  "id": "f079",
+  "theme": "Reproduction",
+  "text": "L'Ara hyacinthe couve environ 29 jours. Les jeunes quittent le nid vers 4 mois, mais restent jusqu'à un an avec leurs parents.",
+  "source": "SeaWorld, fiche « Hyacinth Macaw »",
+  "sci": "Anodorhynchus hyacinthinus"
+ },
+ {
+  "id": "f080",
+  "theme": "Espèces remarquables",
+  "text": "Le nom de genre de l'Ara hyacinthe, Anodorhynchus, signifie « bec sans dent ».",
+  "source": "SeaWorld, fiche « Hyacinth Macaw »",
+  "sci": "Anodorhynchus hyacinthinus"
+ },
+ {
+  "id": "f081",
+  "theme": "Comportement",
+  "text": "L'Ara hyacinthe peut se nourrir de noix de palmier déjà passées par le système digestif des vaches, plus faciles à ouvrir.",
+  "source": "SeaWorld, fiche « Hyacinth Macaw »",
+  "sci": "Anodorhynchus hyacinthinus"
+ },
+ {
+  "id": "f082",
+  "theme": "Anatomie",
+  "text": "La langue sèche et écailleuse de l'Ara hyacinthe contient un os, qui l'aide à creuser l'intérieur des fruits.",
+  "source": "Zoo New England (Stone Zoo), fiche « Hyacinth Macaw »",
+  "sci": "Anodorhynchus hyacinthinus"
+ },
+ {
+  "id": "f083",
+  "theme": "Comportement",
+  "text": "Dès 1863, on a observé des Aras hyacinthes sauvages se servir d'objets pour maintenir une noix pendant qu'ils l'ouvraient.",
+  "source": "Wingham Wildlife Park, fiche « Hyacinth Macaw »",
+  "sci": "Anodorhynchus hyacinthinus"
+ },
+ {
+  "id": "f084",
+  "theme": "Comportement",
+  "text": "En 2012, un Cacatoès de Goffin nommé Figaro, élevé à l'Université de Vienne, a été filmé en train de tailler lui-même des éclats de bois pour attraper une noix hors de portée. Son espèce n'avait jamais été vue utiliser d'outil.",
+  "source": "Université d'Oxford, communiqué sur l'étude « Spontaneous innovation in tool manufacture and use in a Goffin's cockatoo » (Current Biology, 2012)",
+  "sci": "Cacatua goffiniana"
+ },
+ {
+  "id": "f085",
+  "theme": "Comportement",
+  "text": "Une fois sa première technique trouvée, Figaro fabriquait un nouvel outil presque à chaque fois qu'on replaçait une noix hors de sa portée.",
+  "source": "Université de Vienne, communiqué « Clever cockatoo with skilled craftmanship » (ScienceDaily, 2012)",
+  "sci": "Cacatua goffiniana"
+ },
+ {
+  "id": "f086",
+  "theme": "Comportement",
+  "text": "Des Cacatoès de Goffin savent transporter deux outils à la fois et choisir celui qui convient selon le problème : une capacité jusque-là surtout décrite chez les chimpanzés.",
+  "source": "Osuna-Mascaró et al., Current Biology (2023), Université de médecine vétérinaire de Vienne (via Sci.News)",
+  "sci": "Cacatua goffiniana"
+ },
+ {
+  "id": "f087",
+  "theme": "Comportement",
+  "text": "Des Cacatoès de Goffin capturés à l'état sauvage ont été observés utilisant jusqu'à trois outils différents pour extraire les graines d'un fruit.",
+  "source": "Osuna-Mascaró et al., Current Biology (2023), Université de médecine vétérinaire de Vienne (via Sci.News)",
+  "sci": "Cacatua goffiniana"
+ },
+ {
+  "id": "f088",
+  "theme": "Anatomie",
+  "text": "Les plumes jaunes de la tête de la Perruche ondulée sont fluorescentes : elles absorbent les ultraviolets, invisibles pour nous, et les réémettent sous forme de lumière jaune.",
+  "source": "Arnold, Owens & Marshall, « Fluorescent signaling in parrots », Science (2002) ; communiqués des universités du Queensland et de Glasgow",
+  "sci": "Melopsittacus undulatus"
+ },
+ {
+  "id": "f089",
+  "theme": "Reproduction",
+  "text": "Chez la Perruche ondulée, mâles et femelles préfèrent un partenaire dont la fluorescence est intacte à un partenaire dont on l'a atténuée avec de la crème solaire.",
+  "source": "Arnold, Owens & Marshall, « Fluorescent signaling in parrots », Science (2002) ; communiqués des universités du Queensland et de Glasgow",
+  "sci": "Melopsittacus undulatus"
+ },
+ {
+  "id": "f090",
+  "theme": "Anatomie",
+  "text": "En examinant environ 700 perroquets australiens de musées sous lumière noire, des chercheurs ont constaté que les plumes fluorescentes étaient toujours des plumes de parade.",
+  "source": "Science News, « Parrots will fluoresce for sex », 2002"
+ },
+ {
+  "id": "f091",
+  "theme": "Anatomie",
+  "text": "Une étude de 2003 a nuancé le rôle de la fluorescence chez la Perruche ondulée : la réflexion des ultraviolets par ses plumes pourrait compter davantage que la fluorescence elle-même.",
+  "source": "Pearn, Bennett & Cuthill, Proceedings of the Royal Society B (2003)",
+  "sci": "Melopsittacus undulatus"
+ },
+ {
+  "id": "f092",
+  "theme": "Anatomie",
+  "text": "La fluorescence du plumage a été observée chez au moins 52 espèces de perroquets.",
+  "source": "Pearn, Bennett & Cuthill, Proceedings of the Royal Society B (2003)"
+ },
+ {
+  "id": "f093",
+  "theme": "Conservation",
+  "text": "Les perroquets sont l'un des ordres d'oiseaux les plus menacés : 111 espèces sur 398, soit 28 %, sont classées menacées par l'UICN.",
+  "source": "Olah et al., « Ecological and socio-economic factors affecting extinction risk in parrots », Biodiversity and Conservation (2016)"
+ },
+ {
+  "id": "f094",
+  "theme": "Conservation",
+  "text": "L'agriculture, la chasse et le piégeage, ainsi que l'exploitation forestière, sont les menaces les plus fréquentes pour les perroquets dans le monde.",
+  "source": "Olah et al., « Ecological and socio-economic factors affecting extinction risk in parrots », Biodiversity and Conservation (2016)"
+ },
+ {
+  "id": "f095",
+  "theme": "Conservation",
+  "text": "La principale menace pour les perroquets varie selon les régions : l'agriculture en Amérique centrale et du Sud, la chasse et le piégeage en Afrique, l'exploitation forestière et l'urbanisation en Australasie.",
+  "source": "Mongabay, résumé de l'étude d'Olah et al. (2016)"
+ },
+ {
+  "id": "f096",
+  "theme": "Conservation",
+  "text": "Seize espèces de perroquets se sont éteintes. Il s'agissait en majorité de grands oiseaux spécialisés, vivant sur des îles ou dans un seul pays.",
+  "source": "Olah et al., « Ecological and socio-economic factors affecting extinction risk in parrots », Biodiversity and Conservation (2016)"
+ },
+ {
+  "id": "f097",
+  "theme": "Conservation",
+  "text": "Plus de la moitié des espèces de perroquets voient leurs populations diminuer, et des actions de conservation ne concernent que moins de 20 % des populations étudiées.",
+  "source": "Berkunsky et al., Biological Conservation (2017)"
+ },
+ {
+  "id": "f098",
+  "theme": "Espèces remarquables",
+  "text": "Les Psittaciformes, l'ordre des perroquets, forment le quatrième plus grand ordre d'oiseaux.",
+  "source": "Olah et al., « Ecological and socio-economic factors affecting extinction risk in parrots », Biodiversity and Conservation (2016)"
+ },
+ {
+  "id": "f099",
+  "theme": "Comportement",
+  "text": "Chez le Grand Éclectus, le vert du mâle le camoufle des rapaces quand il cherche de la nourriture, tandis que le rouge vif de la femelle signale qu'elle possède une cavité de nidification.",
+  "source": "Heinsohn, Legge & Endler, « Extreme reversed sexual dichromatism in a bird without sex role reversal », Science (2005)",
+  "sci": "Eclectus roratus"
+ },
+ {
+  "id": "f100",
+  "theme": "Espèces remarquables",
+  "text": "Le mâle et la femelle du Grand Éclectus se ressemblent si peu qu'on les a d'abord pris pour deux espèces différentes.",
+  "source": "Sydney Morning Herald, « Parrots' colour scheme is a real cracker », 2005 (propos du chercheur Robert Heinsohn, ANU)",
+  "sci": "Eclectus roratus"
+ },
+ {
+  "id": "f101",
+  "theme": "Reproduction",
+  "text": "Dans la nature, la femelle de Grand Éclectus garde sa cavité de nidification jusqu'à 9 mois par an. Elle la quitte rarement et dépend des mâles pour se nourrir.",
+  "source": "Heinsohn & Legge, « Breeding biology of the reverse-dichromatic, co-operative parrot Eclectus roratus », Journal of Zoology",
+  "sci": "Eclectus roratus"
+ },
+ {
+  "id": "f102",
+  "theme": "Reproduction",
+  "text": "Chez le Grand Éclectus sauvage, jusqu'à cinq mâles peuvent nourrir une même femelle au nid.",
+  "source": "Heinsohn & Legge, « Breeding biology of the reverse-dichromatic, co-operative parrot Eclectus roratus », Journal of Zoology",
+  "sci": "Eclectus roratus"
+ },
+ {
+  "id": "f103",
+  "theme": "Reproduction",
+  "text": "Dans une population sauvage étudiée en Australie, seuls 18 % des œufs de Grand Éclectus ont donné un jeune à l'envol, à cause des prédateurs, des inondations des cavités et des pertes entre congénères.",
+  "source": "Heinsohn & Legge, « Breeding biology of the reverse-dichromatic, co-operative parrot Eclectus roratus », Journal of Zoology",
+  "sci": "Eclectus roratus"
+ },
+ {
+  "id": "f104",
+  "theme": "Reproduction",
+  "text": "Le Grand Éclectus semble capable d'influencer le sexe de ses petits, sans qu'on sache encore pourquoi.",
+  "source": "Heinsohn, « Ecology and Evolution of the Enigmatic Eclectus parrot », Journal of Avian Medicine and Surgery",
+  "sci": "Eclectus roratus"
+ },
+ {
+  "id": "f105",
+  "theme": "Comportement",
+  "text": "Le mâle du Cacatoès noir fabrique sa propre baguette : il détache une branche ou une gousse, la taille à la bonne forme, puis frappe en rythme un tronc creux pour séduire une femelle.",
+  "source": "Heinsohn et al., « Tool-assisted rhythmic drumming in palm cockatoos shares key elements of human instrumental music », Science Advances (2017)",
+  "sci": "Probosciger aterrimus"
+ },
+ {
+  "id": "f106",
+  "theme": "Comportement",
+  "text": "Le tambourinage du Cacatoès noir partage les éléments de base de la musique humaine : un instrument fabriqué, un rythme régulier, des motifs répétés et un style propre à chaque individu.",
+  "source": "Heinsohn et al., « Tool-assisted rhythmic drumming in palm cockatoos shares key elements of human instrumental music », Science Advances (2017)",
+  "sci": "Probosciger aterrimus"
+ },
+ {
+  "id": "f107",
+  "theme": "Comportement",
+  "text": "Chaque Cacatoès noir a sa signature rythmique : certains frappent vite, d'autres lentement, d'autres aiment ajouter une fioriture au début. Elle permettrait de reconnaître le tambourineur à distance.",
+  "source": "Veterinary Nursing / ANU, « Drumming cockatoos have signature beats », 2017",
+  "sci": "Probosciger aterrimus"
+ },
+ {
+  "id": "f108",
+  "theme": "Comportement",
+  "text": "Le tambourinage du Cacatoès noir s'entend jusqu'à une centaine de mètres.",
+  "source": "Sci.News, « Male Palm Cockatoos Play Drums to Attract Mates », 2017 (étude de l'Université nationale australienne)",
+  "sci": "Probosciger aterrimus"
+ },
+ {
+  "id": "f109",
+  "theme": "Reproduction",
+  "text": "Les mâles de Cacatoès noir tambourinent surtout en présence d'une femelle, dans environ 70 % des cas, et leurs joues nues rougissent quand ils sont excités.",
+  "source": "National Geographic, « In a First, Bird Uses Tools to Make Sweet Music », 2017",
+  "sci": "Probosciger aterrimus"
+ },
+ {
+  "id": "f110",
+  "theme": "Comportement",
+  "text": "Pour parader, le mâle de Cacatoès noir dispose d'environ 30 types de cris différents, et tient le plus souvent sa baguette avec le pied gauche.",
+  "source": "Psychology Today, « Custom-made drumsticks showcase cockatoo creativity », 2023 (propos du chercheur Robert Heinsohn, ANU)",
+  "sci": "Probosciger aterrimus"
+ },
+ {
+  "id": "f111",
+  "theme": "Comportement",
+  "text": "Chaque mâle de Cacatoès noir a ses préférences d'instrument : baguettes, gousses ou un mélange des deux. Ce choix relève du goût personnel plus que des matériaux disponibles.",
+  "source": "Science News Explores, 2023, d'après Proceedings of the Royal Society B",
+  "sci": "Probosciger aterrimus"
+ },
+ {
+  "id": "f112",
+  "theme": "Comportement",
+  "text": "Chez le Toui été, chaque petit reçoit un cri personnel, une sorte de « prénom », qu'il apprend de ses parents au nid.",
+  "source": "Université Cornell (Cornell Chronicle), « Parrots learn their 'names' from their parents », 2011",
+  "sci": "Forpus passerinus"
+ },
+ {
+  "id": "f113",
+  "theme": "Comportement",
+  "text": "Pour prouver que les Touis été apprennent leur « prénom » de leurs parents, des chercheurs ont échangé des œufs entre nids : les petits ont appris le cri de leurs parents adoptifs, pas celui de leurs parents biologiques.",
+  "source": "Berg et al., « Vocal learning in wild parrots », Proceedings of the Royal Society B (2011)",
+  "sci": "Forpus passerinus"
+ },
+ {
+  "id": "f114",
+  "theme": "Comportement",
+  "text": "Les parents Touis été commencent à émettre des cris-signatures quand leurs petits sont encore très jeunes. Les petits les imitent, puis y ajoutent leurs propres variations.",
+  "source": "Discover Magazine, « Baby Parrots Learn Their Names From Their Parents », 2011",
+  "sci": "Forpus passerinus"
+ },
+ {
+  "id": "f115",
+  "theme": "Comportement",
+  "text": "Le cri de contact d'un perroquet sauvage renseigne sur son identité, son sexe, son partenaire et le groupe auquel il appartient.",
+  "source": "Université Cornell (Cornell Chronicle), « Parrots learn their 'names' from their parents », 2011"
+ },
+ {
+  "id": "f116",
+  "theme": "Comportement",
+  "text": "À ce jour, seuls les perroquets, les dauphins et les humains sont connus pour imiter les cris-signatures des autres tout au long de leur vie.",
+  "source": "EarthSky, « Wild parrots name their offspring », 2011 (propos du chercheur Karl Berg, Cornell)"
+ },
+ {
+  "id": "f117",
+  "theme": "Conservation",
+  "text": "La Conure de Caroline était le seul perroquet originaire du territoire continental des États-Unis. Le dernier individu est mort au zoo de Cincinnati en 1918.",
+  "source": "National Geographic, « How humans killed off the only parrot native to the continental U.S. », 2019"
+ },
+ {
+  "id": "f118",
+  "theme": "Conservation",
+  "text": "La Conure de Caroline vivait du sud de la Nouvelle-Angleterre jusqu'à la Floride, et vers l'ouest jusqu'au Colorado.",
+  "source": "National Geographic, « How humans killed off the only parrot native to the continental U.S. », 2019"
+ },
+ {
+  "id": "f119",
+  "theme": "Espèces remarquables",
+  "text": "La Conure de Caroline raffolait des graines de lampourde, une plante contenant une toxine puissante. Elle n'en souffrait pas, mais devenait elle-même toxique pour la plupart de ses prédateurs.",
+  "source": "Gelabert et al., « Evolutionary history, genomic adaptation to toxic diet, and extinction of the Carolina Parakeet », Current Biology (2019)"
+ },
+ {
+  "id": "f120",
+  "theme": "Conservation",
+  "text": "Le génome de la Conure de Caroline ne montre aucun signe de consanguinité : son extinction a été brutale, et très probablement due à l'homme, notamment à la chasse pour ses plumes, utilisées sur les chapeaux.",
+  "source": "Institut de biologie évolutive (IBE, CSIC-UPF), communiqué sur l'étude de Current Biology (2019)"
+ },
+ {
+  "id": "f121",
+  "theme": "Espèces remarquables",
+  "text": "La plus proche parente vivante de la Conure de Caroline dont le génome a été étudié est la Conure soleil : leurs lignées se sont séparées il y a environ 3 millions d'années.",
+  "source": "Gelabert et al., « Evolutionary history, genomic adaptation to toxic diet, and extinction of the Carolina Parakeet », Current Biology (2019)",
+  "sci": "Aratinga solstitialis"
+ },
+ {
+  "id": "f122",
+  "theme": "Espèces remarquables",
+  "text": "La Perruche nocturne vit la nuit, se déplace au gré des conditions et passe l'essentiel de son temps au sol. C'est l'un des cinq seuls perroquets terrestres au monde.",
+  "source": "Australian Geographic, « Night parrot confirmed alive again after 30 years? », 2013",
+  "sci": "Pezoporus occidentalis"
+ },
+ {
+  "id": "f123",
+  "theme": "Conservation",
+  "text": "La Perruche nocturne n'avait jamais été photographiée vivante avant 2013. Le naturaliste John Young y est parvenu après 15 ans de recherches et 17 000 heures sur le terrain.",
+  "source": "Mongabay, « Naturalist rediscovers the long-lost night parrot », 2013",
+  "sci": "Pezoporus occidentalis"
+ },
+ {
+  "id": "f124",
+  "theme": "Conservation",
+  "text": "Avant 2013, les seules preuves récentes de l'existence de la Perruche nocturne étaient deux oiseaux trouvés morts, en 1990 et en 2006.",
+  "source": "Mongabay, « Naturalist rediscovers the long-lost night parrot », 2013",
+  "sci": "Pezoporus occidentalis"
+ },
+ {
+  "id": "f125",
+  "theme": "Conservation",
+  "text": "La Perruche nocturne a été décimée au XIXe siècle par les chats et les renards introduits en Australie.",
+  "source": "Mongabay, « Naturalist rediscovers the long-lost night parrot », 2013",
+  "sci": "Pezoporus occidentalis"
+ },
+ {
+  "id": "f126",
+  "theme": "Conservation",
+  "text": "En 1989, le fondateur d'Australian Geographic a offert une récompense de 25 000 dollars à quiconque trouverait une Perruche nocturne, morte ou vivante.",
+  "source": "Australian Geographic, « Night parrot confirmed alive again after 30 years? », 2013",
+  "sci": "Pezoporus occidentalis"
+ },
+ {
+  "id": "f127",
+  "theme": "Conservation",
+  "text": "Le site du Queensland où la Perruche nocturne a été redécouverte a été racheté en 2016 par l'association Bush Heritage Australia pour la protéger.",
+  "source": "Conservation Partners (Queensland), programme « Night Parrot »",
+  "sci": "Pezoporus occidentalis"
+ },
+ {
+  "id": "f128",
+  "theme": "Comportement",
+  "text": "Alex, un Perroquet jaco étudié pendant 30 ans par la chercheuse Irene Pepperberg, savait nommer 50 objets, 7 couleurs et 5 formes, et compter jusqu'à 6.",
+  "source": "Université Brandeis, communiqué « Alex the African Grey parrot », 2007",
+  "sci": "Psittacus erithacus"
+ },
+ {
+  "id": "f129",
+  "theme": "Comportement",
+  "text": "Alex le Perroquet jaco maîtrisait des notions comme « plus grand » et « plus petit », « pareil » et « différent », et même une idée proche du zéro.",
+  "source": "Université Brandeis, communiqué « Alex the African Grey parrot », 2007",
+  "sci": "Psittacus erithacus"
+ },
+ {
+  "id": "f130",
+  "theme": "Comportement",
+  "text": "Alex combinait ses mots pour identifier, demander, refuser ou classer plus de 100 objets. Selon Irene Pepperberg, il avait l'intelligence d'un enfant de 5 ans et la maturité émotionnelle d'un enfant de 2 ans.",
+  "source": "Université Brandeis, communiqué « Alex the African Grey parrot », 2007",
+  "sci": "Psittacus erithacus"
+ },
+ {
+  "id": "f131",
+  "theme": "Comportement",
+  "text": "Alex, le perroquet le plus célèbre de la recherche scientifique, avait été acheté dans une simple animalerie. Il est mort en 2007, à 31 ans.",
+  "source": "NPR, « Alex The Parrot, An Apt Student, Passes Away », 2007",
+  "sci": "Psittacus erithacus"
+ },
+ {
+  "id": "f132",
+  "theme": "Comportement",
+  "text": "Au Pérou, sur une falaise d'argile au bord du fleuve Tambopata, des centaines de perroquets de jusqu'à 18 espèces viennent chaque jour manger de la terre.",
+  "source": "NPR, « Why Do Parrots (And People) Eat Clay? », 2017, d'après Brightsmith et al., Ibis"
+ },
+ {
+  "id": "f133",
+  "theme": "Comportement",
+  "text": "L'argile que mangent les perroquets d'Amazonie contient environ 40 fois plus de sodium que les plantes dont ils se nourrissent.",
+  "source": "NPR, « Why Do Parrots (And People) Eat Clay? », 2017, d'après Brightsmith et al., Ibis"
+ },
+ {
+  "id": "f134",
+  "theme": "Reproduction",
+  "text": "Chez les perroquets du Pérou, la consommation d'argile culmine pendant la saison de reproduction, surtout quand les parents nourrissent leurs petits : un apport minéral pour élever les jeunes.",
+  "source": "NPR, « Why Do Parrots (And People) Eat Clay? », 2017, d'après Brightsmith et al., Ibis"
+ },
+ {
+  "id": "f135",
+  "theme": "Comportement",
+  "text": "Contrairement à une idée répandue, l'argile ne servirait pas surtout à neutraliser les toxines des plantes : les perroquets en mangent davantage quand la nourriture abonde.",
+  "source": "NPR, « Why Do Parrots (And People) Eat Clay? », 2017, d'après Brightsmith et al., Ibis"
+ },
+ {
+  "id": "f136",
+  "theme": "Conservation",
+  "text": "Au Tambopata Research Center, au Pérou, des chercheurs ont installé les tout premiers nichoirs jamais utilisés par des aras sauvages.",
+  "source": "Brightsmith, « Macaw and Clay Lick Studies at Tambopata Research Center, Peru », Watchbird (AFA)",
+  "sci": "Ara macao"
+ },
+ {
+  "id": "f137",
+  "theme": "Élevage",
+  "text": "Plus de la moitié des espèces d'oiseaux sont monomorphes : mâle et femelle se ressemblent. C'est le cas de nombreux perroquets, comme l'Ara bleu ou le Perroquet jaco, pour lesquels seul un test ADN permet de connaître le sexe.",
+  "source": "Paștiu, Turcu & Pusta, « PCR protocols for molecular sexing in monomorphic birds », Scientific Works Series C Veterinary Medicine (2023)",
+  "sci": "Ara ararauna"
+ },
+ {
+  "id": "f138",
+  "theme": "Élevage",
+  "text": "Le sexage par ADN repose sur les chromosomes sexuels : chez les oiseaux, le mâle porte deux chromosomes Z (ZZ) et la femelle un Z et un W (ZW).",
+  "source": "« New Bird Sexing Strategy Developed in the Order Psittaciformes Involves Multiple Markers to Avoid Sex Misidentification », Animals (2021)"
+ },
+ {
+  "id": "f139",
+  "theme": "Élevage",
+  "text": "Pour un test ADN de sexage, quelques plumes, un prélèvement dans le bec ou une goutte de sang suffisent.",
+  "source": "Paștiu, Turcu & Pusta, « PCR protocols for molecular sexing in monomorphic birds », Scientific Works Series C Veterinary Medicine (2023)"
+ },
+ {
+  "id": "f140",
+  "theme": "Élevage",
+  "text": "Le duvet et les plumes permettent de sexer même de très jeunes oisillons par ADN, sans leur causer de stress important.",
+  "source": "« Molecular Determination of Sex from Down and Feather in Wild and Reared Monomorphic and Dimorphic Birds at Juvenile Age », étude publiée sur PubMed Central (2025)"
+ },
+ {
+  "id": "f141",
+  "theme": "Élevage",
+  "text": "Il n'existe pas de marqueur génétique universel pour sexer tous les perroquets. Des chercheurs recommandent de confirmer le résultat avec au moins deux marqueurs différents, pour éviter les erreurs.",
+  "source": "« New Bird Sexing Strategy Developed in the Order Psittaciformes Involves Multiple Markers to Avoid Sex Misidentification », Animals (2021)"
+ },
+ {
+  "id": "f142",
+  "theme": "Élevage",
+  "text": "Avant les tests ADN, les éleveurs faisaient sexer leurs perroquets monomorphes par examen chirurgical des gonades ou par dosage hormonal.",
+  "source": "Watchbird (American Federation of Aviculture), article comparant le sexage chirurgical, hormonal et génétique"
+ },
+ {
+  "id": "f143",
+  "theme": "Élevage",
+  "text": "Chez la Perruche à collier, seul le mâle adulte porte le collier noir et rose. Les femelles et les jeunes des deux sexes en sont dépourvus : un jeune mâle ressemble donc à une femelle.",
+  "source": "EDDMapS (Center for Invasive Species and Ecosystem Health, Université de Géorgie), fiche « Rose-ringed parakeet », d'après le World Parrot Trust",
+  "sci": "Psittacula krameri"
+ },
+ {
+  "id": "f144",
+  "theme": "Élevage",
+  "text": "Le jeune Perruche à collier ressemble à la femelle, mais se reconnaît à son bec d'un rose pâle.",
+  "source": "Oiseaux.net, fiche « Perruche à collier »",
+  "sci": "Psittacula krameri"
+ },
+ {
+  "id": "f145",
+  "theme": "Reproduction",
+  "text": "La Perruche à collier pond 4 à 6 œufs, et les jeunes quittent le nid vers 7 semaines.",
+  "source": "EDDMapS (Center for Invasive Species and Ecosystem Health, Université de Géorgie), fiche « Rose-ringed parakeet », d'après le World Parrot Trust",
+  "sci": "Psittacula krameri"
+ },
+ {
+  "id": "f146",
+  "theme": "Espèces remarquables",
+  "text": "La Perruche à collier mesure environ 40 cm, dont la moitié pour la queue, et pèse de 95 à 140 g.",
+  "source": "Oiseaux.net, fiche « Perruche à collier »",
+  "sci": "Psittacula krameri"
+ },
+ {
+  "id": "f147",
+  "theme": "Comportement",
+  "text": "En dehors de la saison de reproduction, les Perruches à collier sauvages forment des groupes de plusieurs milliers d'oiseaux.",
+  "source": "EDDMapS (Center for Invasive Species and Ecosystem Health, Université de Géorgie), fiche « Rose-ringed parakeet », d'après le World Parrot Trust",
+  "sci": "Psittacula krameri"
+ },
+ {
+  "id": "f148",
+  "theme": "Élevage",
+  "text": "Chez l'Inséparable à tête grise, le sexe des jeunes se voit dès les premières plumes de la tête : grises chez le mâle, vertes chez la femelle, comme chez les adultes.",
+  "source": "Watchbird (American Federation of Aviculture), article sur l'Inséparable à tête grise, 2003",
+  "sci": "Agapornis canus"
+ },
+ {
+  "id": "f149",
+  "theme": "Reproduction",
+  "text": "L'Inséparable à tête grise pond 4 à 6 petits œufs blancs, incubés environ 23 jours par la femelle, que le mâle rejoint au nid la nuit. Les jeunes quittent le nid vers 43 jours.",
+  "source": "Watchbird (American Federation of Aviculture), article sur l'Inséparable à tête grise, 2003",
+  "sci": "Agapornis canus"
+ },
+ {
+  "id": "f150",
+  "theme": "Reproduction",
+  "text": "Le Cacatoès rosalbin pond 3 à 5 œufs, incubés 23 à 25 jours. Les jeunes quittent le nid vers 50 à 55 jours, et atteignent la maturité sexuelle vers 2 à 3 ans.",
+  "source": "Badoca Safari Park, fiche « Galah »",
+  "sci": "Eolophus roseicapilla"
+ },
+ {
+  "id": "f151",
+  "theme": "Reproduction",
+  "text": "Le Cacatoès rosalbin est monogame. Dans la nature, sa saison de reproduction varie selon les conditions du milieu.",
+  "source": "Badoca Safari Park, fiche « Galah »",
+  "sci": "Eolophus roseicapilla"
+ },
+ {
+  "id": "f152",
+  "theme": "Élevage",
+  "text": "L'Ara hyacinthe atteint la maturité sexuelle entre 2 et 4 ans, et peut vivre 30 à 50 ans, voire plus.",
+  "source": "SeaWorld, fiche « Hyacinth Macaw »",
+  "sci": "Anodorhynchus hyacinthinus"
+ },
+ {
+  "id": "f153",
+  "theme": "Élevage",
+  "text": "Chez les inséparables, les œufs sont pondus un jour sur deux et incubés environ 23 jours chacun. Pour estimer la date d'éclosion, il faut compter à partir du dernier œuf pondu, et patienter quelques jours de plus avant de s'inquiéter.",
+  "source": "Lafeber (conseils d'élevage), « Ask Lafeber : Love birds », 2021",
+  "sci": "Agapornis roseicollis"
+ },
+ {
+  "id": "f154",
+  "theme": "Élevage",
+  "text": "Pendant l'incubation, les œufs doivent rester au chaud en permanence. Si la femelle les délaisse toute une nuit, ils refroidissent et les embryons meurent.",
+  "source": "Lafeber (conseils d'élevage), « Ask Lafeber : Love birds », 2021"
+ },
+ {
+  "id": "f155",
+  "theme": "Élevage",
+  "text": "Pour ménager un couple reproducteur, Lafeber conseille de retirer le nichoir dès que les jeunes l'ont quitté, et de laisser les parents se reposer environ 6 mois avant de le remettre.",
+  "source": "Lafeber (conseils d'élevage), « Ask Lafeber : Lovebird », 2023"
+ },
+ {
+  "id": "f156",
+  "theme": "Élevage",
+  "text": "Une fois sevrés, les jeunes doivent être séparés de leurs parents, qui pourraient sinon chercher à s'accoupler avec eux quelques mois plus tard.",
+  "source": "Lafeber (conseils d'élevage), « Ask Lafeber : Lovebird », 2023"
+ },
+ {
+  "id": "f157",
+  "theme": "Élevage",
+  "text": "Des oiseaux apparentés ne doivent jamais se reproduire entre eux, même s'ils forment spontanément un couple : il faut les séparer.",
+  "source": "Lafeber (conseils d'élevage), « Ask Lafeber : Peach faced Lovebirds », 2019"
  }
 ]

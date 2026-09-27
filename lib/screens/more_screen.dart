@@ -6,6 +6,7 @@ import '../theme/app_theme.dart';
 import '../widgets/app_icons.dart';
 import '../widgets/common.dart';
 import 'cessions_screen.dart';
+import 'conservation_screen.dart';
 import 'documents_screen.dart';
 import 'env_readings_screen.dart';
 import 'genealogy_screen.dart';
@@ -108,6 +109,15 @@ class MoreScreen extends StatelessWidget {
             ),
           ),
           const GroupLabel('Ressources'),
+          InfoCard(
+            leading: _menuIcon('shield'),
+            title: 'Perroquets menacés',
+            subtitle: 'Les chiffres de la conservation en graphiques',
+            trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => ConservationScreen(appState: appState)),
+            ),
+          ),
           InfoCard(
             leading: _menuIcon('book'),
             title: 'Espèces de psittacidés',

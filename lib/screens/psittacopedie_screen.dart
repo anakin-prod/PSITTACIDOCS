@@ -6,6 +6,7 @@ import '../models/parrot_fact.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_icons.dart';
+import 'conservation_screen.dart';
 import 'species_detail_screen.dart';
 import '../widgets/animations.dart';
 import '../widgets/common.dart';
@@ -180,6 +181,15 @@ class _PsittacopedieScreenState extends State<PsittacopedieScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: staggered([
+          InfoCard(
+            leading: const IconTile(name: 'shield'),
+            title: 'Perroquets menacés',
+            subtitle: 'Les chiffres de la conservation en graphiques',
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => ConservationScreen(appState: appState)),
+            ),
+          ),
+          const SizedBox(height: 6),
           TextField(
             controller: _ctrl,
             onChanged: (_) => setState(() {}),
