@@ -2,10 +2,7 @@
 #
 #   1 · Build de test       → un .apk à installer directement sur un téléphone.
 #   2 · Build Google Play    → un .aab signé avec ta clé, à envoyer sur Google Play.
-#
-# Les DEUX sont signés avec la même clé (« psittacidocs_upload »). C'est
-# nécessaire à la connexion Google : Firebase reconnaît l'appli grâce à
-# l'empreinte (SHA-1) de cette clé, qui doit donc rester la même à chaque build.
+
 #
 # La clé de signature a été générée une fois pour toutes (script conservé dans
 # scripts/generate_keystore.sh) et enregistrée dans Codemagic sous le nom
@@ -21,18 +18,15 @@ workflows:
     max_build_duration: 60
     environment:
       flutter: stable
-      android_signing:
-        - psittacidocs_upload
     scripts:
       - name: Préparer le projet
         script: bash scripts/prepare_android.sh
       - name: Compiler l'APK de test
         script: |
-          # Signé avec la clé de l'appli (et non plus une clé de débogage
-          # changeante) : s'installe directement sur un téléphone Android et la
-          # connexion Google fonctionne. Google Play n'accepte que le .aab du
-          # workflow 2. Si une version installée depuis Google Play est déjà sur
-          # le téléphone, la désinstaller avant d'installer ce .apk.
+          # Signé avec la clé de débogage : s'installe directement sur un
+          # téléphone Android, mais n'est pas accepté par Google Play.
+          # (Limite : la connexion Google ne fonctionne pas avec ce fichier, la
+          # clé de débogage changeant à chaque build. E-mail et mot de passe, oui.)
           flutter build apk --release --build-number=$BUILD_NUMBER
           mkdir -p livrable
           cp build/app/outputs/flutter-apk/app-release.apk "livrable/psittacidocs-test-$BUILD_NUMBER.apk"
