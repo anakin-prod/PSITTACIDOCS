@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 
+import '../data/genetic_presets.dart';
 import '../logic/genetics.dart';
 import '../logic/inbreeding.dart' show formatPercent;
+import '../models/species.dart';
+import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/animations.dart';
 import '../widgets/common.dart';
+import 'species_picker_screen.dart';
 
-/// Calculateur génétique en mode libre : l'éleveur saisit chaque mutation,
-/// son mode de transmission et le génotype des deux parents.
+/// Calculateur génétique. Pour une espèce dont la liste des mutations a été
+/// validée, des puces pré-remplies évitent de deviner le mode de
+/// transmission. Pour toutes les autres espèces (ou en complément), le mode
+/// libre reste disponible : l'éleveur saisit lui-même chaque mutation.
 class GeneticsScreen extends StatefulWidget {
-  const GeneticsScreen({super.key});
+  final AppState appState;
+  const GeneticsScreen({super.key, required this.appState});
 
   @override
   State<GeneticsScreen> createState() => _GeneticsScreenState();
@@ -18,6 +25,35 @@ class GeneticsScreen extends StatefulWidget {
 class _GeneticsScreenState extends State<GeneticsScreen> {
   final List<GeneInput> _genes = [GeneInput()];
   final List<TextEditingController> _names = [TextEditingController()];
+  Species? _species;
+
+  Future<void> _pickSpecies() async {
+    final picked = await Navigator.of(context).push<Species>(
+      MaterialPageRoute(builder: (_) => SpeciesPickerScreen(appState: widget.appState)),
+    );
+    if (picked != null) setState(() => _species = picked);
+  }
+
+  /// Ajoute une mutation pré-remplie (ou la retire si elle est déjà présente).
+  void _togglePreset(MutationPreset preset) {
+    final i = _genes.indexWhere((g) => g.name == preset.name);
+    if (i != -1) {
+      _removeGene(i);
+      return;
+    }
+    setState(() {
+      // La toute première carte n'a encore jamais été touchée : on la
+      // remplit plutôt que d'en ajouter une vide en plus.
+      if (_genes.length == 1 && _genes[0].name.isEmpty) {
+        _genes[0].name = preset.name;
+        _genes[0].mode = preset.mode;
+        _names[0].text = preset.name;
+        return;
+      }
+      _genes.add(GeneInput(name: preset.name, mode: preset.mode));
+      _names.add(TextEditingController(text: preset.name));
+    });
+  }
 
   @override
   void dispose() {
@@ -25,6 +61,75 @@ class _GeneticsScreenState extends State<GeneticsScreen> {
       c.dispose();
     }
     super.dispose();
+  }
+
+  Widget _presetPicker() {
+    final presets = geneticPresets[_species?.sci];
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
+      decoration: AppDecor.card(radius: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Espèce', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+          const SizedBox(height: 8),
+          InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: _pickSpecies,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: AppColors.neutralBg,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _species?.label ?? 'Choisir une espèce (facultatif)',
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        color: _species == null ? AppColors.mute : AppColors.navy,
+                        fontWeight: _species == null ? FontWeight.w400 : FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right, size: 18, color: AppColors.mute),
+                ],
+              ),
+            ),
+          ),
+          if (_species != null && presets == null) ...[
+            const SizedBox(height: 10),
+            Text(
+              'Pas encore de mutations pré-remplies validées pour cette espèce : utilise le mode libre ci-dessous.',
+              style: TextStyle(fontSize: 12, color: AppColors.mute, height: 1.4),
+            ),
+          ],
+          if (presets != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              'Touche une mutation pour l\'ajouter à la liste ci-dessous.',
+              style: TextStyle(fontSize: 12, color: AppColors.mute),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final p in presets)
+                  PillChoice(
+                    label: Text(p.note == null ? p.name : '${p.name} · ${p.note}'),
+                    selected: _genes.any((g) => g.name == p.name),
+                    onSelected: (_) => _togglePreset(p),
+                  ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
   }
 
   void _addGene() => setState(() {
@@ -158,6 +263,7 @@ class _GeneticsScreenState extends State<GeneticsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          _presetPicker(),
           const InfoBanner(
             'Mode libre : tu indiques toi-même le mode de transmission de chaque mutation. '
             'Vérifie-le pour ton espèce : un mode erroné donne un résultat faux.',

@@ -156,7 +156,7 @@ class MoreScreen extends StatelessWidget {
               if (!await ensurePremium(context, PremiumFeature.geneticsCalculator, reason: 'Le calculateur génétique fait partie de Premium.')) return;
               if (!context.mounted) return;
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const GeneticsScreen()),
+                MaterialPageRoute(builder: (_) => GeneticsScreen(appState: appState)),
               );
             },
           ),
