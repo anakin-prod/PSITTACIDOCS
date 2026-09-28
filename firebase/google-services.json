@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "978475003492",
+    "project_id": "psittacidocs",
+    "storage_bucket": "psittacidocs.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978475003492:android:9b7921cd4a3380ab85f971",
+        "android_client_info": {
+          "package_name": "app.psittacidocs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCccLO-24MdMN6jXcC1DyNL9H9xVgmGO0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
