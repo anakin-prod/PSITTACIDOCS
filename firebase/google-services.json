@@ -12,7 +12,20 @@
           "package_name": "app.psittacidocs"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "978475003492-j6ahdu75p62sqvf7fqknftk32k6ctpgt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.psittacidocs",
+            "certificate_hash": "942c30058dcd31bd74a6c5e681bc0bbfbe68fd5f"
+          }
+        },
+        {
+          "client_id": "978475003492-jstio4i9jvl0pr707bnvabbunntk9l9h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCccLO-24MdMN6jXcC1DyNL9H9xVgmGO0A"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "978475003492-jstio4i9jvl0pr707bnvabbunntk9l9h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

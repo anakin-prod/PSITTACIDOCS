@@ -18,15 +18,18 @@ workflows:
     max_build_duration: 60
     environment:
       flutter: stable
+      android_signing:
+        - psittacidocs_upload
     scripts:
       - name: Préparer le projet
         script: bash scripts/prepare_android.sh
       - name: Compiler l'APK de test
         script: |
-          # Signé avec la clé de débogage : s'installe directement sur un
-          # téléphone Android, mais n'est pas accepté par Google Play.
-          # (Limite : la connexion Google ne fonctionne pas avec ce fichier, la
-          # clé de débogage changeant à chaque build. E-mail et mot de passe, oui.)
+          # Signé avec la clé de l'appli, dont l'empreinte est déclarée dans
+          # Firebase : c'est ce qui permet la connexion Google. S'installe
+          # directement sur un téléphone Android ; Google Play n'accepte que le
+          # .aab du workflow 2. Si une version signée autrement est déjà
+          # installée (ancien test ou Google Play), la désinstaller d'abord.
           flutter build apk --release --build-number=$BUILD_NUMBER
           mkdir -p livrable
           cp build/app/outputs/flutter-apk/app-release.apk "livrable/psittacidocs-test-$BUILD_NUMBER.apk"
