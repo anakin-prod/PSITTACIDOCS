@@ -6,7 +6,10 @@ import 'screens/birds_screen.dart';
 import 'screens/couples_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/more_screen.dart';
+import 'cloud/cloud_service.dart';
+import 'premium/premium_service.dart';
 import 'screens/splash_view.dart';
+import 'services.dart';
 import 'state/app_state.dart';
 import 'theme/app_theme.dart';
 import 'widgets/app_frame.dart';
@@ -32,7 +35,21 @@ class _PsittacidocsAppState extends State<PsittacidocsApp> {
   @override
   void initState() {
     super.initState();
-    appState.load();
+    Services.premium = PremiumService();
+    Services.cloud = CloudService(
+      appState,
+      canSyncCheck: () => Services.premium.allows(PremiumFeature.cloudSync),
+    );
+    // Les comptes en ligne ne démarrent qu'une fois les données locales chargées.
+    appState.load().then((_) => Services.cloud.init());
+    Services.premium.init();
+    // Un abonnement qui vient d'être activé déclenche aussitôt une synchronisation.
+    var wasPremium = false;
+    Services.premium.addListener(() {
+      final now = Services.premium.isPremium;
+      if (now && !wasPremium) Services.cloud.syncSoon();
+      wasPremium = now;
+    });
     Future.delayed(_minSplash, () {
       if (mounted) setState(() => _splashTimeElapsed = true);
     });

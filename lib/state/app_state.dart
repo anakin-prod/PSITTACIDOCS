@@ -81,6 +81,14 @@ class AppState extends ChangeNotifier {
   bool _loaded = false;
   bool get loaded => _loaded;
 
+  /// Appelée après chaque modification enregistrée (sert à la synchronisation
+  /// en ligne). Les données reçues du serveur ne la déclenchent pas.
+  VoidCallback? onLocalChange;
+
+  /// Vrai si des données de l'utilisateur existaient déjà sur l'appareil au
+  /// chargement (et non les seules données de démonstration).
+  bool loadedFromDisk = false;
+
   /// Informations de la Psittacopédie concernant une espèce.
   List<ParrotFact> factsFor(String sci) => facts.where((f) => f.sci == sci).toList();
 
@@ -158,28 +166,8 @@ class AppState extends ChangeNotifier {
     if (await file.exists()) {
       try {
         final data = jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-        birds = (data['birds'] as List<dynamic>? ?? [])
-            .map((e) => Bird.fromJson(e as Map<String, dynamic>))
-            .toList();
-        couples = (data['couples'] as List<dynamic>? ?? [])
-            .map((e) => Couple.fromJson(e as Map<String, dynamic>))
-            .toList();
-        events = (data['events'] as List<dynamic>? ?? [])
-            .map((e) => AgendaEvent.fromJson(e as Map<String, dynamic>))
-            .toList();
-        notifications = (data['notifications'] as List<dynamic>? ?? [])
-            .map((e) => AppNotification.fromJson(e as Map<String, dynamic>))
-            .toList();
-        settings = data['settings'] == null
-            ? Settings()
-            : Settings.fromJson(data['settings'] as Map<String, dynamic>);
-        envReadings = (data['envReadings'] as List<dynamic>? ?? [])
-            .map((e) => EnvReading.fromJson(e as Map<String, dynamic>))
-            .toList();
-        incubations = (data['incubations'] as List<dynamic>? ?? [])
-            .map((e) => Incubation.fromJson(e as Map<String, dynamic>))
-            .toList();
-        _seq = data['seq'] as int? ?? 1000;
+        _applyData(data);
+        loadedFromDisk = true;
       } catch (_) {
         _seedDemoData();
       }
@@ -190,19 +178,66 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Toutes les données de l'élevage, au format d'enregistrement (aussi utilisé
+  /// pour la sauvegarde en ligne).
+  Map<String, dynamic> exportSnapshot() => {
+    'birds': birds.map((e) => e.toJson()).toList(),
+    'couples': couples.map((e) => e.toJson()).toList(),
+    'events': events.map((e) => e.toJson()).toList(),
+    'notifications': notifications.map((e) => e.toJson()).toList(),
+    'settings': settings.toJson(),
+    'envReadings': envReadings.map((e) => e.toJson()).toList(),
+    'incubations': incubations.map((e) => e.toJson()).toList(),
+    'seq': _seq,
+  };
+
+  /// Remplace toutes les données par celles d'un instantané. Tout est lu avant
+  /// d'être appliqué : si les données sont abîmées, rien n'est modifié.
+  void _applyData(Map<String, dynamic> data) {
+    final newBirds = (data['birds'] as List<dynamic>? ?? [])
+        .map((e) => Bird.fromJson(e as Map<String, dynamic>))
+        .toList();
+    final newCouples = (data['couples'] as List<dynamic>? ?? [])
+        .map((e) => Couple.fromJson(e as Map<String, dynamic>))
+        .toList();
+    final newEvents = (data['events'] as List<dynamic>? ?? [])
+        .map((e) => AgendaEvent.fromJson(e as Map<String, dynamic>))
+        .toList();
+    final newNotifications = (data['notifications'] as List<dynamic>? ?? [])
+        .map((e) => AppNotification.fromJson(e as Map<String, dynamic>))
+        .toList();
+    final newSettings = data['settings'] == null
+        ? Settings()
+        : Settings.fromJson(data['settings'] as Map<String, dynamic>);
+    final newEnv = (data['envReadings'] as List<dynamic>? ?? [])
+        .map((e) => EnvReading.fromJson(e as Map<String, dynamic>))
+        .toList();
+    final newIncubations = (data['incubations'] as List<dynamic>? ?? [])
+        .map((e) => Incubation.fromJson(e as Map<String, dynamic>))
+        .toList();
+    final newSeq = data['seq'] as int? ?? 1000;
+
+    birds = newBirds;
+    couples = newCouples;
+    events = newEvents;
+    notifications = newNotifications;
+    settings = newSettings;
+    envReadings = newEnv;
+    incubations = newIncubations;
+    _seq = newSeq;
+  }
+
+  /// Applique des données reçues du serveur (sans les compter comme une
+  /// modification locale).
+  Future<void> replaceAllData(Map<String, dynamic> data) async {
+    _applyData(data);
+    notifyListeners();
+    await _save();
+  }
+
   Future<void> _save() async {
     final file = await _dataFile();
-    final data = {
-      'birds': birds.map((e) => e.toJson()).toList(),
-      'couples': couples.map((e) => e.toJson()).toList(),
-      'events': events.map((e) => e.toJson()).toList(),
-      'notifications': notifications.map((e) => e.toJson()).toList(),
-      'settings': settings.toJson(),
-      'envReadings': envReadings.map((e) => e.toJson()).toList(),
-      'incubations': incubations.map((e) => e.toJson()).toList(),
-      'seq': _seq,
-    };
-    await file.writeAsString(jsonEncode(data));
+    await file.writeAsString(jsonEncode(exportSnapshot()));
   }
 
   /// Sauvegarde puis notifie l'interface. À appeler après chaque
@@ -210,6 +245,7 @@ class AppState extends ChangeNotifier {
   Future<void> commit() async {
     notifyListeners();
     await _save();
+    onLocalChange?.call();
   }
 
   void _seedDemoData() {

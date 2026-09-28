@@ -51,6 +51,12 @@ IconData iconFor(String name) {
       return Icons.lightbulb_outline;
     case 'pdf':
       return Icons.picture_as_pdf_outlined;
+    case 'cloud':
+      return Icons.cloud_outlined;
+    case 'star':
+      return Icons.workspace_premium_outlined;
+    case 'user':
+      return Icons.person_outline_rounded;
     default:
       return Icons.circle_outlined;
   }

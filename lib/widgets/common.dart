@@ -294,6 +294,7 @@ class SearchField extends StatelessWidget {
     case 'shield':
     case 'calendar':
     case 'genetics':
+    case 'cloud':
       return (AppColors.maleBg, AppColors.maleFg);
     case 'couple':
     case 'out':
@@ -303,6 +304,7 @@ class SearchField extends StatelessWidget {
       return (AppColors.goodBg, AppColors.goodFg);
     case 'doc':
     case 'gear':
+    case 'user':
       return (AppColors.neutralBg, AppColors.neutralFg);
     default:
       return (AppColors.bronzeBg, AppColors.bronzeDark);

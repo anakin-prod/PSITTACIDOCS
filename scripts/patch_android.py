@@ -12,12 +12,19 @@ ensuite deux réglages :
    signé avec la clé de débogage, installable directement sur un téléphone.
 2. Nom affiché sous l'icône : « Psittacidocs » au lieu de « psittacidocs ».
 3. Contrôle : l'identifiant d'application doit être exactement « app.psittacidocs ».
+4. Firebase (comptes en ligne) : si le fichier firebase/google-services.json
+   est présent, il est copié dans android/app/ et le plugin « google-services »
+   est branché. S'il est absent, le build reste valide : l'appli fonctionne alors
+   sans les comptes en ligne (c'est le cas tant que le projet Firebase n'est pas
+   créé). Android 7.0 (API 24) est exigé comme version minimale.
 
 Le script échoue avec un message explicite si le fichier généré ne ressemble
 pas à ce qui est attendu, plutôt que de produire un build mal signé.
 """
+import json
 import pathlib
 import re
+import shutil
 import sys
 
 MARKER = "PSITTACIDOCS_SIGNING"
@@ -101,6 +108,7 @@ def patch_gradle() -> None:
     src = src[: match.start()] + block + src[match.start():]
     src = src.replace(old_line, new_line, 1)
     src = force_target_sdk(src, path)
+    src = force_min_sdk(src, path)
     path.write_text(src, encoding="utf-8")
     print(f"{path} : signature Codemagic configurée.")
 
@@ -125,6 +133,115 @@ def force_target_sdk(src: str, path) -> str:
     return src
 
 
+# Firebase Authentication et Cloud Firestore exigent au minimum Android 6 ; on
+# vise Android 7.0 (API 24), qui couvre plus de 97 % des appareils.
+MIN_SDK = 24
+
+
+def force_min_sdk(src: str, path) -> str:
+    substitutions = [
+        (r"minSdk\s*=\s*flutter\.minSdkVersion", f"minSdk = maxOf(flutter.minSdkVersion, {MIN_SDK})"),
+        (r"minSdkVersion\s+flutter\.minSdkVersion", f"minSdkVersion Math.max(flutter.minSdkVersion, {MIN_SDK})"),
+    ]
+    for pattern, replacement in substitutions:
+        new_src, n = re.subn(pattern, replacement, src, count=1)
+        if n:
+            print(f"{path} : version Android minimale : au moins l'API {MIN_SDK}.")
+            return new_src
+    # Valeur fixe dans le modèle : on la relève si nécessaire.
+    match = re.search(r"(minSdk(?:Version)?\s*=?\s*)(\d+)", src)
+    if match:
+        value = max(int(match.group(2)), MIN_SDK)
+        print(f"{path} : version Android minimale fixée à l'API {value}.")
+        return src[: match.start(2)] + str(value) + src[match.end(2):]
+    print("Avertissement : réglage minSdk introuvable, valeur par défaut de Flutter conservée.")
+    return src
+
+
+# ---------------------------------------------------------------------------
+# Firebase
+# ---------------------------------------------------------------------------
+
+FIREBASE_JSON = pathlib.Path("firebase/google-services.json")
+ANDROID_DIR = pathlib.Path("android")
+# Version du plugin Gradle « google-services » (vérifiée en septembre 2026).
+GMS_PLUGIN_VERSION = "4.4.4"
+GMS_ID = "com.google.gms.google-services"
+
+
+def _insert_after_line(path: pathlib.Path, pattern: str, new_line: str, what: str) -> None:
+    src = path.read_text(encoding="utf-8")
+    if GMS_ID in src:
+        print(f"{path} : plugin google-services déjà présent.")
+        return
+    match = re.search(pattern, src, flags=re.MULTILINE)
+    if not match:
+        fail(f"{what} : ligne du plugin « com.android.application » introuvable dans {path} (modèle Flutter modifié ?).")
+        return
+    indent = match.group(1)
+    src = src[: match.end()] + "\n" + indent + new_line + src[match.end():]
+    path.write_text(src, encoding="utf-8")
+    print(f"{path} : plugin google-services ajouté.")
+
+
+def patch_firebase() -> None:
+    if not FIREBASE_JSON.exists():
+        print(
+            "Firebase : firebase/google-services.json absent → build SANS comptes en ligne "
+            "(l'appli fonctionne, les comptes sont désactivés)."
+        )
+        return
+
+    try:
+        data = json.loads(FIREBASE_JSON.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        fail(f"firebase/google-services.json n'est pas un JSON valide : {exc}")
+        return
+    packages = [
+        client.get("client_info", {}).get("android_client_info", {}).get("package_name")
+        for client in data.get("client", [])
+    ]
+    if EXPECTED_APP_ID not in packages:
+        fail(
+            f"firebase/google-services.json est prévu pour {packages}, pas pour {EXPECTED_APP_ID}. "
+            "Dans Firebase, l'appli Android doit avoir exactement ce nom de package."
+        )
+        return
+
+    shutil.copyfile(FIREBASE_JSON, APP_DIR / "google-services.json")
+    print(f"Firebase : configuration copiée dans {APP_DIR / 'google-services.json'}.")
+
+    # 1) Déclaration du plugin dans settings.gradle(.kts)
+    kts = ANDROID_DIR / "settings.gradle.kts"
+    groovy = ANDROID_DIR / "settings.gradle"
+    if kts.exists():
+        _insert_after_line(
+            kts,
+            r'^([ \t]*)id\("com\.android\.application"\)[^\n]*$',
+            f'id("{GMS_ID}") version "{GMS_PLUGIN_VERSION}" apply false',
+            "settings",
+        )
+    elif groovy.exists():
+        _insert_after_line(
+            groovy,
+            r'^([ \t]*)id\s+"com\.android\.application"[^\n]*$',
+            f'id "{GMS_ID}" version "{GMS_PLUGIN_VERSION}" apply false',
+            "settings",
+        )
+    else:
+        fail("android/settings.gradle(.kts) introuvable.")
+
+    # 2) Application du plugin dans android/app/build.gradle(.kts)
+    app_kts = APP_DIR / "build.gradle.kts"
+    app_groovy = APP_DIR / "build.gradle"
+    if app_kts.exists():
+        _insert_after_line(app_kts, r'^([ \t]*)id\("com\.android\.application"\)[ \t]*$', f'id("{GMS_ID}")', "app")
+    elif app_groovy.exists():
+        _insert_after_line(app_groovy, r'^([ \t]*)id\s+"com\.android\.application"[ \t]*$', f'id "{GMS_ID}"', "app")
+    else:
+        fail("android/app/build.gradle(.kts) introuvable.")
+
+
 def patch_label() -> None:
     manifest = APP_DIR / "src/main/AndroidManifest.xml"
     if not manifest.exists():
@@ -141,3 +258,4 @@ def patch_label() -> None:
 if __name__ == "__main__":
     patch_gradle()
     patch_label()
+    patch_firebase()

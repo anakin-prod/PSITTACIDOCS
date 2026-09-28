@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import '../logic/format.dart';
 import '../logic/inbreeding.dart';
 import '../logic/pdf_export.dart';
+import '../premium/premium_gate.dart';
+import '../premium/premium_service.dart';
 import '../models/bird.dart';
 import '../models/bird_document.dart';
 import '../state/app_state.dart';
@@ -54,6 +56,7 @@ class _BirdDetailScreenState extends State<BirdDetailScreen> {
 
   Future<void> _exportPdf(Bird bird) async {
     final messenger = ScaffoldMessenger.of(context);
+    if (!await ensurePremium(context, PremiumFeature.pdfExport, reason: 'Les exports PDF font partie de Premium.')) return;
     try {
       await shareBirdSheet(widget.appState, bird);
     } catch (e) {

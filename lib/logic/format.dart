@@ -29,3 +29,12 @@ const List<String> _monthsShort = ['JANV', 'FÉVR', 'MARS', 'AVR', 'MAI', 'JUIN'
 
 /// « SEPT »
 String frenchShortMonth(int month) => _monthsShort[month - 1];
+
+/// « à l'instant », « il y a 5 min », « il y a 3 h », sinon la date complète.
+String relativeAgo(DateTime d) {
+  final diff = DateTime.now().difference(d);
+  if (diff.inSeconds < 45) return 'à l’instant';
+  if (diff.inMinutes < 60) return 'il y a ${diff.inMinutes < 1 ? 1 : diff.inMinutes} min';
+  if (diff.inHours < 24) return 'il y a ${diff.inHours} h';
+  return 'le ${formatDateTime(d)}';
+}

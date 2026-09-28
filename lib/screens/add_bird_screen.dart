@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/bird.dart';
+import '../premium/premium_gate.dart';
 import '../models/species.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
@@ -76,7 +77,7 @@ class _AddBirdScreenState extends State<AddBirdScreen> {
     setState(() => _photoPath = saved.path);
   }
 
-  void _save() {
+  Future<void> _save() async {
     setState(() => _error = null);
     if (_species == null) {
       setState(() => _error = 'Choisissez une espèce.');
@@ -118,6 +119,10 @@ class _AddBirdScreenState extends State<AddBirdScreen> {
       notes: _notesCtrl.text.trim(),
       quarantineUntil: quarUntil,
     );
+
+    // Formule gratuite : limite du nombre d'oiseaux (sans effet tant que le verrouillage est désactivé).
+    final allowed = await ensureBirdQuota(context, widget.appState);
+    if (!allowed || !mounted) return;
 
     widget.appState.addBird(bird);
     Navigator.of(context).pushReplacement(

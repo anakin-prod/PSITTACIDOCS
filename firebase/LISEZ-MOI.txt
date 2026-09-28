@@ -1,0 +1,18 @@
+DOSSIER FIREBASE — Psittacidocs
+================================
+
+Ce dossier contient la configuration des comptes en ligne.
+
+1) google-services.json  (à ajouter ICI : firebase/google-services.json)
+   Fichier téléchargé depuis la console Firebase, quand on ajoute l'appli
+   Android « app.psittacidocs » au projet.
+   Tant qu'il est absent, l'appli se compile et fonctionne normalement, mais
+   sans les comptes en ligne (les écrans de connexion l'indiquent).
+   Ce fichier ne contient pas de mot de passe : ses clés sont limitées à
+   l'appli grâce au nom de package et à l'empreinte de signature.
+
+2) firestore.rules
+   Règles de sécurité de la base de données. À copier dans la console Firebase :
+   Firestore Database > onglet « Règles » > coller > Publier.
+   Sans elles, la base refuse tout accès (la synchronisation échoue avec
+   « Accès refusé par le serveur »).

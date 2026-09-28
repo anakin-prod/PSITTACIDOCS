@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../logic/pdf_export.dart';
+import '../premium/premium_gate.dart';
+import '../premium/premium_service.dart';
+import '../services.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_icons.dart';
@@ -16,6 +19,9 @@ import 'settings_screen.dart';
 import 'species_screen.dart';
 import 'stats_screen.dart';
 import '../widgets/animations.dart';
+import 'account_screen.dart';
+import 'cloud_intro_screen.dart';
+import 'paywall_screen.dart';
 
 class MoreScreen extends StatelessWidget {
   final AppState appState;
@@ -44,6 +50,40 @@ class MoreScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(18, 14, 18, 110),
         children: staggered([
           const ScreenHeader(title: 'Plus', subtitle: 'Outils, suivi et réglages'),
+          const GroupLabel('Compte'),
+          ListenableBuilder(
+            listenable: Listenable.merge([Services.cloud, Services.premium]),
+            builder: (context, _) {
+              final cloud = Services.cloud;
+              final premium = Services.premium;
+              return Column(
+                children: [
+                  InfoCard(
+                    leading: _menuIcon('cloud'),
+                    title: cloud.signedIn ? 'Mon compte' : 'Sauvegarde en ligne',
+                    subtitle: cloud.signedIn
+                        ? '${cloud.email ?? ''} · ${describeSync(cloud).title}'
+                        : 'Connexion, sauvegarde et synchronisation',
+                    trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => cloud.signedIn ? const AccountScreen() : const CloudIntroScreen(),
+                      ),
+                    ),
+                  ),
+                  InfoCard(
+                    leading: _menuIcon('star'),
+                    title: 'Psittacidocs Premium',
+                    subtitle: premium.isPremium ? 'Abonnement actif' : 'Découvre les fonctions Premium',
+                    trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const PaywallScreen()),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
           const GroupLabel('Mon élevage'),
           InfoCard(
             leading: _menuIcon('doc'),
@@ -86,27 +126,39 @@ class MoreScreen extends StatelessWidget {
             title: 'Conditions des volières',
             subtitle: 'Température, humidité, éclairage',
             trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => EnvReadingsScreen(appState: appState)),
-            ),
+            onTap: () async {
+              if (!await ensurePremium(context, PremiumFeature.breedingLogs, reason: 'Le suivi des volières fait partie de Premium.')) return;
+              if (!context.mounted) return;
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => EnvReadingsScreen(appState: appState)),
+              );
+            },
           ),
           InfoCard(
             leading: _menuIcon('egg'),
             title: 'Incubation',
             subtitle: '${appState.incubations.where((i) => i.isActive).length} en cours',
             trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => IncubationsScreen(appState: appState)),
-            ),
+            onTap: () async {
+              if (!await ensurePremium(context, PremiumFeature.breedingLogs, reason: 'Le suivi de l’incubation fait partie de Premium.')) return;
+              if (!context.mounted) return;
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => IncubationsScreen(appState: appState)),
+              );
+            },
           ),
           InfoCard(
             leading: _menuIcon('genetics'),
             title: 'Calculateur génétique',
             subtitle: 'Mutations possibles chez les jeunes',
             trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const GeneticsScreen()),
-            ),
+            onTap: () async {
+              if (!await ensurePremium(context, PremiumFeature.geneticsCalculator, reason: 'Le calculateur génétique fait partie de Premium.')) return;
+              if (!context.mounted) return;
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const GeneticsScreen()),
+              );
+            },
           ),
           const GroupLabel('Ressources'),
           InfoCard(
@@ -134,6 +186,7 @@ class MoreScreen extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right, color: AppColors.mute),
             onTap: () async {
               final messenger = ScaffoldMessenger.of(context);
+              if (!await ensurePremium(context, PremiumFeature.pdfExport, reason: 'Les exports PDF font partie de Premium.')) return;
               try {
                 await shareInventory(appState);
               } catch (e) {

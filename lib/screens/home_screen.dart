@@ -4,7 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/animations.dart';
+import '../premium/premium_gate.dart';
+import '../premium/premium_service.dart';
 import '../widgets/common.dart';
+import '../widgets/sync_status_pill.dart';
 import 'add_bird_screen.dart';
 import 'bird_detail_screen.dart';
 import 'env_readings_screen.dart';
@@ -33,6 +36,13 @@ class HomeScreen extends StatelessWidget {
 
   void _open(BuildContext context, Widget screen) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+
+  /// Ouvre un écran réservé à Premium, après vérification de l'accès.
+  Future<void> _openPremium(BuildContext context, PremiumFeature feature, String reason, Widget screen) async {
+    if (!await ensurePremium(context, feature, reason: reason)) return;
+    if (!context.mounted) return;
+    _open(context, screen);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +81,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+        const SyncStatusPill(),
         const SizedBox(height: 16),
         _Hero(
           date: frenchLongDate(DateTime.now()),
@@ -88,9 +99,9 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(child: _QuickAction(label: 'Couple', kind: 'couple', onTap: () => _open(context, NewCoupleScreen(appState: appState)))),
             const SizedBox(width: 10),
-            Expanded(child: _QuickAction(label: 'Relevé', kind: 'thermo', onTap: () => _open(context, NewEnvReadingScreen(appState: appState)))),
+            Expanded(child: _QuickAction(label: 'Relevé', kind: 'thermo', onTap: () => _openPremium(context, PremiumFeature.breedingLogs, 'Le suivi des volières fait partie de Premium.', NewEnvReadingScreen(appState: appState)))),
             const SizedBox(width: 10),
-            Expanded(child: _QuickAction(label: 'Incubation', kind: 'egg', onTap: () => _open(context, NewIncubationScreen(appState: appState)))),
+            Expanded(child: _QuickAction(label: 'Incubation', kind: 'egg', onTap: () => _openPremium(context, PremiumFeature.breedingLogs, 'Le suivi de l’incubation fait partie de Premium.', NewIncubationScreen(appState: appState)))),
           ],
         ),
         if (upcoming.isNotEmpty) ...[
