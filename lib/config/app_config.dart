@@ -8,7 +8,7 @@ const String kAccountDeletionUrl =
     'https://anakin-prod.github.io/PSITTACIDOCS/privacy-policy/#suppression-compte';
 
 /// Contact de l'éditeur.
-const String kContactEmail = 'hamdoune.ibrahim@gmail.com';
+const String kContactEmail = 'contact.surnia@gmail.com';
 
 // ---------------------------------------------------------------------------
 // Formule Premium
