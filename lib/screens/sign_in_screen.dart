@@ -5,6 +5,7 @@ import '../services.dart';
 import '../theme/app_theme.dart';
 import '../widgets/animations.dart';
 import '../widgets/common.dart';
+import '../widgets/google_logo.dart';
 import 'account_screen.dart';
 
 /// Connexion ou création de compte, par e-mail et mot de passe ou avec Google.
@@ -201,10 +202,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 22,
                   alignment: Alignment.center,
                   decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                  child: Text(
-                    'G',
-                    style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w700, color: const Color(0xFF4285F4)),
-                  ),
+                  child: const GoogleLogo(size: 14),
                 ),
                 const SizedBox(width: 10),
                 const Text('Continuer avec Google'),

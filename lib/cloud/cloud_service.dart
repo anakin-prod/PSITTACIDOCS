@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
+import '../config/app_config.dart';
 import '../state/app_state.dart';
 import 'sync_codec.dart';
 import 'sync_planner.dart';
@@ -116,6 +118,7 @@ class CloudService extends ChangeNotifier {
   int _changeCounter = 0;
   Timer? _debounce;
   StreamSubscription<User?>? _authSub;
+  Future<void>? _googleReady;
   _RemoteMeta? _conflictMeta;
 
   bool get signedIn => user != null;
@@ -174,6 +177,11 @@ class CloudService extends ChangeNotifier {
       user = FirebaseAuth.instance.currentUser;
       _authSub = FirebaseAuth.instance.authStateChanges().listen(_onAuthChanged);
       if (user != null) _scheduleSync(const Duration(seconds: 2));
+      // Préparation de la connexion Google (une seule fois). Les appels à
+      // _googleSignIn attendent cette préparation avant de démarrer.
+      _googleReady = GoogleSignIn.instance
+          .initialize(serverClientId: kGoogleServerClientId)
+          .catchError((Object e) => debugPrint('Connexion Google indisponible : $e'));
     }
     notifyListeners();
   }
@@ -459,11 +467,26 @@ class CloudService extends ChangeNotifier {
   Future<String?> registerWithEmail(String email, String password) =>
       _authCall(() => FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.trim(), password: password));
 
-  Future<String?> signInWithGoogle() => _authCall(() {
-    final provider = GoogleAuthProvider();
-    provider.setCustomParameters({'prompt': 'select_account'});
-    return FirebaseAuth.instance.signInWithProvider(provider);
-  });
+  Future<String?> signInWithGoogle() async {
+    if (!available) return _unavailableMessage;
+    try {
+      await _googleReady;
+      final googleUser = await GoogleSignIn.instance.authenticate();
+      final idToken = googleUser.authentication.idToken;
+      if (idToken == null) return 'Connexion Google incomplète. Réessaie dans un instant.';
+      await FirebaseAuth.instance.signInWithCredential(GoogleAuthProvider.credential(idToken: idToken));
+      user = FirebaseAuth.instance.currentUser;
+      notifyListeners();
+      return null;
+    } on GoogleSignInException catch (e) {
+      // L'utilisateur a fermé la fenêtre de choix de compte : ce n'est pas une erreur.
+      return e.code == GoogleSignInExceptionCode.canceled ? null : 'Connexion Google impossible.';
+    } on FirebaseAuthException catch (e) {
+      return _authMessage(e);
+    } catch (e) {
+      return 'Erreur : $e';
+    }
+  }
 
   Future<String?> sendPasswordReset(String email) async {
     if (!available) return _unavailableMessage;
@@ -550,7 +573,11 @@ class CloudService extends ChangeNotifier {
         }
         await u.reauthenticateWithCredential(EmailAuthProvider.credential(email: mail, password: password));
       } else if (isGoogleAccount) {
-        await u.reauthenticateWithProvider(GoogleAuthProvider());
+        await _googleReady;
+        final googleUser = await GoogleSignIn.instance.authenticate();
+        final idToken = googleUser.authentication.idToken;
+        if (idToken == null) return 'Reconnexion Google incomplète. Réessaie dans un instant.';
+        await u.reauthenticateWithCredential(GoogleAuthProvider.credential(idToken: idToken));
       }
 
       // 2. Suppression des données en ligne.
@@ -577,6 +604,8 @@ class CloudService extends ChangeNotifier {
       errorMessage = null;
       notifyListeners();
       return null;
+    } on GoogleSignInException catch (e) {
+      return e.code == GoogleSignInExceptionCode.canceled ? 'Suppression annulée.' : 'Reconnexion Google impossible.';
     } on FirebaseAuthException catch (e) {
       return _authMessage(e) ?? 'Suppression annulée.';
     } on TimeoutException {

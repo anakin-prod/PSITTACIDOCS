@@ -10,6 +10,13 @@ const String kAccountDeletionUrl =
 /// Contact de l'éditeur.
 const String kContactEmail = 'contact.surnia@gmail.com';
 
+/// Identifiant du client web du projet Firebase (présent dans
+/// google-services.json, entrée de type 3). Ce n'est pas un secret : il sert
+/// uniquement à ce que Google délivre un jeton reconnu par Firebase lors de la
+/// connexion avec Google. À mettre à jour si google-services.json change.
+const String kGoogleServerClientId =
+    '978475003492-jstio4i9jvl0pr707bnvabbunntk9l9h.apps.googleusercontent.com';
+
 // ---------------------------------------------------------------------------
 // Formule Premium
 // ---------------------------------------------------------------------------
