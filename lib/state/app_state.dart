@@ -78,6 +78,12 @@ class AppState extends ChangeNotifier {
   String? _currentFactId;
   int _seq = 1000;
 
+  // Identifiants des éléments de l'élevage d'exemple, pour pouvoir les retirer
+  // seuls (« Quitter l'exemple ») sans toucher à ce que l'utilisateur a ajouté.
+  Set<String> _demoRings = {};
+  Set<String> _demoCouples = {};
+  Set<int> _demoNotifs = {};
+
   bool _loaded = false;
   bool get loaded => _loaded;
 
@@ -191,6 +197,34 @@ class AppState extends ChangeNotifier {
   /// quand l'élevage est vide.
   Future<void> loadDemoData() async {
     _seedDemoData();
+    _demoRings = birds.map((b) => b.ring).toSet();
+    _demoCouples = couples.map((c) => c.id).toSet();
+    _demoNotifs = notifications.map((n) => n.id).toSet();
+    await commit();
+  }
+
+  /// Vrai tant que des éléments de l'élevage d'exemple sont présents.
+  bool get isDemoActive =>
+      birds.any((b) => _demoRings.contains(b.ring)) || couples.any((c) => _demoCouples.contains(c.id));
+
+  /// Retire l'élevage d'exemple. Tout ce que l'utilisateur a ajouté lui-même
+  /// est conservé (sauf ce qui dépend directement d'un élément d'exemple :
+  /// un couple formé avec un oiseau d'exemple, et les incubations de ce couple).
+  Future<void> exitDemo() async {
+    final removedCouples = couples
+        .where((c) =>
+            _demoCouples.contains(c.id) ||
+            _demoRings.contains(c.maleRing) ||
+            _demoRings.contains(c.femaleRing))
+        .map((c) => c.id)
+        .toSet();
+    birds = birds.where((b) => !_demoRings.contains(b.ring)).toList();
+    couples = couples.where((c) => !removedCouples.contains(c.id)).toList();
+    incubations = incubations.where((i) => !removedCouples.contains(i.coupleId)).toList();
+    notifications = notifications.where((n) => !_demoNotifs.contains(n.id)).toList();
+    _demoRings = {};
+    _demoCouples = {};
+    _demoNotifs = {};
     await commit();
   }
 
@@ -204,6 +238,9 @@ class AppState extends ChangeNotifier {
     envReadings = [];
     incubations = [];
     _seq = 1000;
+    _demoRings = {};
+    _demoCouples = {};
+    _demoNotifs = {};
     await commit();
   }
 
@@ -218,6 +255,12 @@ class AppState extends ChangeNotifier {
     'envReadings': envReadings.map((e) => e.toJson()).toList(),
     'incubations': incubations.map((e) => e.toJson()).toList(),
     'seq': _seq,
+    if (_demoRings.isNotEmpty || _demoCouples.isNotEmpty || _demoNotifs.isNotEmpty)
+      'demo': {
+        'rings': _demoRings.toList(),
+        'couples': _demoCouples.toList(),
+        'notifs': _demoNotifs.toList(),
+      },
   };
 
   /// Remplace toutes les données par celles d'un instantané. Tout est lu avant
@@ -245,6 +288,7 @@ class AppState extends ChangeNotifier {
         .map((e) => Incubation.fromJson(e as Map<String, dynamic>))
         .toList();
     final newSeq = data['seq'] as int? ?? 1000;
+    final demo = data['demo'] as Map<String, dynamic>?;
 
     birds = newBirds;
     couples = newCouples;
@@ -254,6 +298,9 @@ class AppState extends ChangeNotifier {
     envReadings = newEnv;
     incubations = newIncubations;
     _seq = newSeq;
+    _demoRings = {...?(demo?['rings'] as List<dynamic>?)?.map((e) => e as String)};
+    _demoCouples = {...?(demo?['couples'] as List<dynamic>?)?.map((e) => e as String)};
+    _demoNotifs = {...?(demo?['notifs'] as List<dynamic>?)?.map((e) => (e as num).toInt())};
   }
 
   /// Applique des données reçues du serveur (sans les compter comme une

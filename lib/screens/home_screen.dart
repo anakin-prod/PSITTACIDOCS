@@ -82,6 +82,21 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         const SyncStatusPill(),
+        if (appState.isDemoActive) ...[
+          const SizedBox(height: 14),
+          _DemoBanner(
+            onExit: () async {
+              final ok = await confirmDestructive(
+                context,
+                title: 'Quitter l’exemple ?',
+                message: 'Les oiseaux, couples et notifications d’exemple seront retirés. '
+                    'Tout ce que tu as ajouté toi-même est conservé.',
+                confirmLabel: 'Quitter l’exemple',
+              );
+              if (ok) await appState.exitDemo();
+            },
+          ),
+        ],
         const SizedBox(height: 16),
         _Hero(
           date: frenchLongDate(DateTime.now()),
@@ -101,7 +116,7 @@ class HomeScreen extends StatelessWidget {
               if (!context.mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Élevage d’exemple chargé. Tu pourras l’effacer dans Paramètres → Données.'),
+                  content: Text('Élevage d’exemple chargé. Tu peux le quitter à tout moment depuis l’Accueil.'),
                 ),
               );
             },
@@ -142,6 +157,44 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+/// Bandeau affiché tant que l'élevage d'exemple est chargé.
+class _DemoBanner extends StatelessWidget {
+  final VoidCallback onExit;
+  const _DemoBanner({required this.onExit});
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+    decoration: BoxDecoration(
+      color: AppColors.bronze.withValues(alpha: 0.14),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: AppColors.bronze.withValues(alpha: 0.45)),
+    ),
+    child: Row(
+      children: [
+        const Icon(Icons.visibility_outlined, color: AppColors.bronzeDark, size: 22),
+        const SizedBox(width: 12),
+        const Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Tu explores un élevage d’exemple',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.navy)),
+              SizedBox(height: 2),
+              Text('Les oiseaux et couples affichés sont fictifs.',
+                  style: TextStyle(fontSize: 12, color: AppColors.mute)),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: onExit,
+          child: const Text('Quitter', style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.bronzeDark)),
+        ),
+      ],
+    ),
+  );
+}
+
 /// Carte d'accueil affichée tant que l'élevage est vide (premier lancement).
 class _WelcomeCard extends StatelessWidget {
   final VoidCallback onAddBird;
@@ -170,7 +223,7 @@ class _WelcomeCard extends StatelessWidget {
         const SizedBox(height: 10),
         const Text(
           'Ton élevage est vide pour l’instant. Ajoute ton premier oiseau, ou découvre l’appli '
-          'avec un élevage d’exemple : tu pourras l’effacer à tout moment dans Paramètres → Données.',
+          'avec un élevage d’exemple : tu pourras le quitter à tout moment, d’un geste, depuis cet écran.',
           style: TextStyle(fontSize: 13.5, height: 1.45, color: AppColors.mute),
         ),
         const SizedBox(height: 14),

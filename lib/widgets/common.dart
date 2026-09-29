@@ -324,7 +324,11 @@ class IconTile extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(size * 0.32)),
-      child: Icon(iconFor(name), color: fg, size: size * 0.5),
+      // L'oiseau est dessiné à partir du perroquet de l'appli (et non de
+      // l'icône « oiseau » générique de Flutter, qui représente sa mascotte).
+      child: name == 'bird' || name == 'parrot'
+          ? Center(child: ImageIcon(const AssetImage('assets/images/nav_parrot.png'), color: fg, size: size * 0.56))
+          : Icon(iconFor(name), color: fg, size: size * 0.5),
     );
   }
 }

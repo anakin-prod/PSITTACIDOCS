@@ -6,6 +6,7 @@ import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/animations.dart';
 import '../widgets/common.dart';
+import 'onboarding_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
   final AppState appState;
@@ -206,20 +207,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (appState.isEmptyBreeding) ...[
-                  OutlinedButton(
-                    onPressed: () async {
-                      await appState.loadDemoData();
-                      if (!context.mounted) return;
-                      setState(() {});
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Élevage d’exemple chargé.')),
-                      );
-                    },
-                    child: const Text('Charger l’élevage d’exemple'),
-                  ),
-                  const SizedBox(height: 10),
-                ],
                 OutlinedButton.icon(
                   icon: const Icon(Icons.delete_outline_rounded, size: 20, color: AppColors.red),
                   label: const Text('Effacer toutes les données', style: TextStyle(color: AppColors.red)),
@@ -275,6 +262,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ],
             ),
+          ),
+          const SizedBox(height: 10),
+          OutlinedButton.icon(
+            icon: const Icon(Icons.slideshow_outlined, size: 20),
+            label: const Text('Revoir la présentation'),
+            onPressed: () => showOnboarding(context),
           ),
         ]),
       ),

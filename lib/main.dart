@@ -6,6 +6,7 @@ import 'screens/birds_screen.dart';
 import 'screens/couples_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/more_screen.dart';
+import 'screens/onboarding_dialog.dart';
 import 'cloud/cloud_service.dart';
 import 'premium/premium_service.dart';
 import 'screens/splash_view.dart';
@@ -93,6 +94,18 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   int _tab = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Présentation des fonctionnalités, une seule fois sur cet appareil, une
+    // fois l'écran principal affiché.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) showOnboardingIfFirstLaunch(context);
+      });
+    });
+  }
 
   void _select(int i) {
     if (i != _tab) HapticFeedback.selectionClick();
