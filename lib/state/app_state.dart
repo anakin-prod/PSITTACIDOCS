@@ -169,13 +169,42 @@ class AppState extends ChangeNotifier {
         _applyData(data);
         loadedFromDisk = true;
       } catch (_) {
-        _seedDemoData();
+        // Fichier abîmé : on le met de côté plutôt que de l'écraser à la
+        // prochaine sauvegarde, pour qu'il reste récupérable. L'appli démarre vide.
+        try {
+          final stamp = DateTime.now().millisecondsSinceEpoch;
+          await file.rename('${file.path}.abime-$stamp');
+        } catch (_) {}
       }
-    } else {
-      _seedDemoData();
     }
+    // Premier lancement (aucun fichier) : l'élevage démarre vide. Les données
+    // d'exemple ne sont chargées qu'à la demande (voir loadDemoData).
     _loaded = true;
     notifyListeners();
+  }
+
+  /// Vrai si l'élevage ne contient encore aucune donnée saisie.
+  bool get isEmptyBreeding =>
+      birds.isEmpty && couples.isEmpty && incubations.isEmpty && envReadings.isEmpty && events.isEmpty;
+
+  /// Charge un élevage d'exemple, pour découvrir l'appli. Proposé seulement
+  /// quand l'élevage est vide.
+  Future<void> loadDemoData() async {
+    _seedDemoData();
+    await commit();
+  }
+
+  /// Efface toutes les données de l'élevage sur cet appareil. Les réglages sont
+  /// conservés. Si un compte est connecté, l'effacement est ensuite synchronisé.
+  Future<void> eraseAllData() async {
+    birds = [];
+    couples = [];
+    events = [];
+    notifications = [];
+    envReadings = [];
+    incubations = [];
+    _seq = 1000;
+    await commit();
   }
 
   /// Toutes les données de l'élevage, au format d'enregistrement (aussi utilisé

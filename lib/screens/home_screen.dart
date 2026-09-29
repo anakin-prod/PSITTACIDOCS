@@ -92,6 +92,21 @@ class HomeScreen extends StatelessWidget {
           incubations: activeIncubations,
           toWean: toWean,
         ),
+        if (appState.isEmptyBreeding) ...[
+          const SizedBox(height: 14),
+          _WelcomeCard(
+            onAddBird: () => _open(context, AddBirdScreen(appState: appState)),
+            onLoadDemo: () async {
+              await appState.loadDemoData();
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Élevage d’exemple chargé. Tu pourras l’effacer dans Paramètres → Données.'),
+                ),
+              );
+            },
+          ),
+        ],
         const SizedBox(height: 14),
         Row(
           children: [
@@ -125,6 +140,46 @@ class HomeScreen extends StatelessWidget {
       ]),
     );
   }
+}
+
+/// Carte d'accueil affichée tant que l'élevage est vide (premier lancement).
+class _WelcomeCard extends StatelessWidget {
+  final VoidCallback onAddBird;
+  final VoidCallback onLoadDemo;
+  const _WelcomeCard({required this.onAddBird, required this.onLoadDemo});
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(18),
+    decoration: AppDecor.card(radius: 22),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const IconTile(name: 'bird', size: 40),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Bienvenue !',
+                style: GoogleFonts.lora(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.navy),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          'Ton élevage est vide pour l’instant. Ajoute ton premier oiseau, ou découvre l’appli '
+          'avec un élevage d’exemple : tu pourras l’effacer à tout moment dans Paramètres → Données.',
+          style: TextStyle(fontSize: 13.5, height: 1.45, color: AppColors.mute),
+        ),
+        const SizedBox(height: 14),
+        ElevatedButton(onPressed: onAddBird, child: const Text('Ajouter mon premier oiseau')),
+        const SizedBox(height: 8),
+        OutlinedButton(onPressed: onLoadDemo, child: const Text('Explorer avec un exemple')),
+      ],
+    ),
+  );
 }
 
 /// Bandeau bleu nuit : date, nom de l'élevage, chiffres clés, perroquet en filigrane.

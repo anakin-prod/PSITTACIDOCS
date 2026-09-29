@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../services.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/animations.dart';
@@ -194,6 +195,59 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     setState(() => settings.remindNourrissage = v);
                     appState.saveSettings();
                   },
+                ),
+              ],
+            ),
+          ),
+          const SectionLabel('Données'),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: AppDecor.card(radius: 22),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (appState.isEmptyBreeding) ...[
+                  OutlinedButton(
+                    onPressed: () async {
+                      await appState.loadDemoData();
+                      if (!context.mounted) return;
+                      setState(() {});
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Élevage d’exemple chargé.')),
+                      );
+                    },
+                    child: const Text('Charger l’élevage d’exemple'),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.delete_outline_rounded, size: 20, color: AppColors.red),
+                  label: const Text('Effacer toutes les données', style: TextStyle(color: AppColors.red)),
+                  onPressed: appState.isEmptyBreeding
+                      ? null
+                      : () async {
+                          final signedIn = Services.cloud.signedIn;
+                          final ok = await confirmDestructive(
+                            context,
+                            title: 'Effacer toutes les données ?',
+                            message: 'Oiseaux, couples, documents enregistrés, incubations, relevés et agenda '
+                                'seront supprimés de cet appareil. Tes réglages sont conservés.'
+                                '${signedIn ? '\n\nTu es connecté : l’effacement sera aussi appliqué à ta sauvegarde en ligne et à tes autres appareils.' : ''}',
+                            confirmLabel: 'Tout effacer',
+                          );
+                          if (!ok) return;
+                          await appState.eraseAllData();
+                          if (!context.mounted) return;
+                          setState(() {});
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Toutes les données ont été effacées.')),
+                          );
+                        },
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Pour effacer aussi ton compte en ligne, utilise « Supprimer mon compte » dans Mon compte.',
+                  style: TextStyle(fontSize: 11.5, height: 1.4, color: AppColors.mute),
                 ),
               ],
             ),
