@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>978475003492-3ml6dudoi8p1425n382hrhtdscg5decd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.978475003492-3ml6dudoi8p1425n382hrhtdscg5decd</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>978475003492-j6ahdu75p62sqvf7fqknftk32k6ctpgt.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDfx7oIh2WLieB7uUpjT8vtAbgR8XebxRw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>978475003492</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>app.psittacidocs</string>
+	<key>PROJECT_ID</key>
+	<string>psittacidocs</string>
+	<key>STORAGE_BUCKET</key>
+	<string>psittacidocs.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:978475003492:ios:0555cdad1287110d85f971</string>
+</dict>
+</plist>
