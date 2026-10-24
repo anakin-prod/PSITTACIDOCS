@@ -17,11 +17,17 @@ enum PremiumFeature {
   pdfExport,
 }
 
-/// Abonnement Premium via Google Play Facturation.
+/// Abonnement Premium via Google Play Facturation (Android) ou l'App Store
+/// (iPhone, StoreKit 2).
 ///
-/// L'abonnement est rattaché au compte Google Play de l'utilisateur : il se
-/// retrouve sur tous ses appareils connectés à ce compte, grâce à « Restaurer
-/// mes achats ». Le statut est vérifié auprès de Google Play à chaque démarrage.
+/// L'abonnement est rattaché au compte de la boutique (compte Google Play ou
+/// identifiant Apple) : il se retrouve sur tous les appareils connectés à ce
+/// compte, grâce à « Restaurer mes achats ». Le statut est vérifié auprès de la
+/// boutique à chaque démarrage. Sur iPhone, la restauration ne renvoie que les
+/// abonnements en cours (StoreKit 2), jamais les anciens abonnements expirés.
+///
+/// Les deux boutiques sont indépendantes : un abonnement pris sur Android ne
+/// débloque pas Premium sur iPhone, et inversement.
 ///
 /// Limite connue : la vérification se fait sur l'appareil, sans serveur. C'est
 /// suffisant pour une petite appli ; une vérification côté serveur pourra être
@@ -115,7 +121,7 @@ class PremiumService extends ChangeNotifier {
 
   Future<void> buy(ProductDetails product) async {
     if (!storeAvailable) {
-      message = 'Google Play est inaccessible pour le moment.';
+      message = kIsAppleStore ? 'L’App Store est inaccessible pour le moment.' : 'Google Play est inaccessible pour le moment.';
       notifyListeners();
       return;
     }
@@ -131,7 +137,7 @@ class PremiumService extends ChangeNotifier {
     }
   }
 
-  /// Interroge Google Play pour retrouver l'abonnement actif de ce compte Google.
+  /// Interroge la boutique pour retrouver l'abonnement actif de ce compte.
   Future<void> restore() async {
     if (!storeAvailable) return;
     _sawActiveThisSession = false;
@@ -141,7 +147,7 @@ class PremiumService extends ChangeNotifier {
       debugPrint('Restauration impossible : $e');
       return;
     }
-    // Google Play ne renvoie rien quand il n'y a plus d'abonnement actif : sans
+    // La boutique ne renvoie rien quand il n'y a plus d'abonnement actif : sans
     // réponse dans le délai, on considère que l'abonnement est terminé.
     _restoreTimer?.cancel();
     _restoreTimer = Timer(_restoreWait, () {
@@ -168,7 +174,8 @@ class PremiumService extends ChangeNotifier {
           purchaseInProgress = false;
         }
       }
-      // Sans cette étape, Google Play rembourse l'achat au bout de 3 jours.
+      // Sans cette étape, Google Play rembourse l'achat au bout de 3 jours, et
+      // l'App Store le représente à chaque démarrage.
       if (p.pendingCompletePurchase) {
         try {
           await InAppPurchase.instance.completePurchase(p);

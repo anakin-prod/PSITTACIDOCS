@@ -1,4 +1,5 @@
 /// Réglages généraux de l'application.
+import 'dart:io' show Platform;
 
 /// Politique de confidentialité, hébergée sur GitHub Pages.
 const String kPrivacyPolicyUrl = 'https://anakin-prod.github.io/PSITTACIDOCS/privacy-policy/';
@@ -33,8 +34,25 @@ const bool kPremiumEnforced = false;
 const int kFreeBirdLimit = 25;
 
 /// Identifiants des abonnements, à créer à l'identique dans la Play Console
-/// (Monétiser → Produits → Abonnements). Les prix affichés dans l'appli sont
-/// ceux de la Play Console : aucun tarif n'est écrit ici.
+/// (Monétiser → Produits → Abonnements) et dans App Store Connect (Monétisation
+/// → Abonnements, un seul groupe « Psittacidocs Premium »). Les prix affichés
+/// dans l'appli sont ceux des boutiques : aucun tarif n'est écrit ici.
 const String kSubMonthlyId = 'psittacidocs_premium_monthly';
 const String kSubYearlyId = 'psittacidocs_premium_yearly';
 const Set<String> kSubscriptionIds = {kSubMonthlyId, kSubYearlyId};
+
+// ---------------------------------------------------------------------------
+// Boutique de l'appareil (Google Play sur Android, App Store sur iPhone)
+// ---------------------------------------------------------------------------
+
+/// Vrai sur iPhone : l'abonnement passe alors par l'App Store.
+bool get kIsAppleStore => Platform.isIOS;
+
+/// Page où l'utilisateur gère ou résilie son abonnement.
+String get kManageSubscriptionsUrl => kIsAppleStore
+    ? 'https://apps.apple.com/account/subscriptions'
+    : 'https://play.google.com/store/account/subscriptions';
+
+/// Conditions d'utilisation standard d'Apple (CLUF), à afficher près de
+/// l'abonnement sur iPhone comme l'exige l'App Store.
+const String kAppleStandardEulaUrl = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';

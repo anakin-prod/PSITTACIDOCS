@@ -16,3 +16,20 @@ Ce dossier contient la configuration des comptes en ligne.
    Firestore Database > onglet « Règles » > coller > Publier.
    Sans elles, la base refuse tout accès (la synchronisation échoue avec
    « Accès refusé par le serveur »).
+
+3) GoogleService-Info.plist  (à ajouter ICI : firebase/GoogleService-Info.plist)
+   Équivalent de google-services.json pour l'iPhone. Il se télécharge dans la
+   console Firebase après avoir ajouté l'appli iOS « app.psittacidocs »
+   (Paramètres du projet > Vos applications > Ajouter une application > iOS).
+   Le build iPhone de Codemagic le place automatiquement dans l'appli et en
+   tire les réglages de la connexion Google (scripts/patch_ios.py).
+   Sans lui, la version iPhone se compile mais fonctionne sans les comptes.
+
+4) Connexion avec Apple
+   Obligatoire sur l'App Store dès que la connexion Google est proposée.
+   À activer dans Firebase : Authentication > Sign-in method > Apple.
+   Pour qu'Apple soit prévenu quand un utilisateur supprime son compte
+   (exigence d'Apple), remplir aussi la partie « Configuration du flux de code
+   OAuth » : identifiant d'équipe Apple, ID et fichier de la clé
+   « Sign in with Apple » créée sur developer.apple.com.
+

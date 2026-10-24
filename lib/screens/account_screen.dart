@@ -120,6 +120,15 @@ class _AccountScreenState extends State<AccountScreen> {
               'Ton compte et toute ta sauvegarde en ligne seront supprimés définitivement. '
               'Les données présentes sur cet appareil ne sont pas effacées.',
             ),
+            if (!needsPassword && (cloud.isAppleAccount || cloud.isGoogleAccount)) ...[
+              const SizedBox(height: 10),
+              Text(
+                cloud.isAppleAccount
+                    ? 'Apple va te demander de confirmer ton identité.'
+                    : 'Google va te demander de confirmer ton compte.',
+                style: const TextStyle(fontSize: 13, color: AppColors.mute),
+              ),
+            ],
             if (needsPassword) ...[
               const SizedBox(height: 14),
               TextField(
@@ -299,7 +308,7 @@ class _AccountScreenState extends State<AccountScreen> {
                           Wrap(
                             spacing: 6,
                             children: [
-                              Tag(cloud.isGoogleAccount ? 'Compte Google' : 'E-mail et mot de passe'),
+                              Tag(cloud.providerLabel),
                               if (Services.premium.isPremium) const Tag('Premium', tone: TagTone.bronze),
                             ],
                           ),

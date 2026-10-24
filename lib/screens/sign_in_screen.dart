@@ -8,7 +8,8 @@ import '../widgets/common.dart';
 import '../widgets/google_logo.dart';
 import 'account_screen.dart';
 
-/// Connexion ou création de compte, par e-mail et mot de passe ou avec Google.
+/// Connexion ou création de compte, par e-mail et mot de passe, avec Google,
+/// ou avec Apple (sur iPhone).
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
@@ -84,6 +85,16 @@ class _SignInScreenState extends State<SignInScreen> {
       _info = null;
     });
     final result = await Services.cloud.signInWithGoogle();
+    _finish(result);
+  }
+
+  Future<void> _apple() async {
+    setState(() {
+      _busy = true;
+      _error = null;
+      _info = null;
+    });
+    final result = await Services.cloud.signInWithApple();
     _finish(result);
   }
 
@@ -192,6 +203,28 @@ class _SignInScreenState extends State<SignInScreen> {
             ],
           ),
           const SizedBox(height: 18),
+          // Bouton Apple selon les règles de présentation d'Apple : fond noir,
+          // logo et texte blancs, au moins aussi visible que les autres.
+          if (Services.cloud.appleSignInSupported) ...[
+            ElevatedButton(
+              onPressed: _busy ? null : _apple,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: Colors.black54,
+                disabledForegroundColor: Colors.white70,
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.apple, size: 22, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text('Continuer avec Apple'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
           OutlinedButton(
             onPressed: _busy ? null : _google,
             child: Row(

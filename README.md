@@ -26,15 +26,17 @@ bash scripts/prepare_android.sh
 flutter run                       # ou : flutter build apk / flutter build appbundle
 ```
 
-## Les deux builds Codemagic
+## Les builds Codemagic
 
-Le fichier `codemagic.yaml` définit deux workflows, à lancer à la main depuis
+Le fichier `codemagic.yaml` définit trois workflows (deux Android, un
+iPhone décrit plus bas), à lancer à la main depuis
 Codemagic (**Start new build**, puis choix du workflow) :
 
 | Workflow | Résultat | Quand l'utiliser |
 | --- | --- | --- |
 | **1 · Build de test** | `psittacidocs-test-N.apk` | Pour installer l'appli sur ton téléphone et la tester. Signé avec une clé de test : refusé par Google Play. |
 | **2 · Build Google Play** | `psittacidocs-play-N.aab` | Pour publier sur Google Play. Signé avec ta propre clé. |
+| **3 · Build iPhone** | `.ipa` envoyé sur TestFlight | Pour tester sur iPhone puis publier sur l'App Store. |
 
 Les fichiers produits se téléchargent dans l'onglet **Artifacts** du build.
 
@@ -62,6 +64,45 @@ Google Play.
 
 Identifiant de l'application : `app.psittacidocs`. Il devient
 **définitif** dès le premier envoi sur Google Play.
+
+## Version iPhone (workflow « 3 · Build iPhone »)
+
+Le dossier `ios/` est recréé à chaque build par `scripts/prepare_ios.sh`, puis
+`scripts/patch_ios.py` y ajoute : identifiant `app.psittacidocs`, iOS 15
+minimum, iPhone uniquement, droit « Se connecter avec Apple », textes des
+autorisations (photos, appareil photo), configuration Firebase
+(`firebase/GoogleService-Info.plist`) et connexion Google. Le build signe
+l'appli et l'envoie directement sur **TestFlight**.
+
+Préparation, une seule fois :
+
+1. **developer.apple.com → Identifiers** : créer l'App ID `app.psittacidocs`
+   (nom « Psittacidocs ») et cocher **Sign in with Apple**.
+2. **App Store Connect → Applications → +** : créer l'appli (même
+   identifiant, nom « Psittacidocs », langue principale français, SKU
+   `psittacidocs`).
+3. **App Store Connect → Utilisateurs et accès → Intégrations → API App Store
+   Connect** : créer une clé (accès « App Manager »), télécharger le `.p8`,
+   noter l'Issuer ID et le Key ID.
+4. **Codemagic → Integrations → Developer Portal → Manage keys** : ajouter
+   cette clé sous le nom exact `Psittacidocs`.
+5. **Codemagic → codemagic.yaml settings → Code signing identities** :
+   - *iOS certificates* → **Generate certificate** → type *Apple Distribution*
+     (télécharger et garder le fichier proposé) ;
+   - sur developer.apple.com → **Profiles** : créer un profil *App Store
+     Connect* pour `app.psittacidocs` avec ce certificat ;
+   - *iOS provisioning profiles* → **Fetch profiles** → sélectionner ce
+     profil → **Download selected**.
+6. Firebase : voir `firebase/LISEZ-MOI.txt` (points 3 et 4).
+
+Abonnements : les créer dans App Store Connect (**Monétisation →
+Abonnements**, un groupe « Psittacidocs Premium ») avec **les mêmes
+identifiants** que sur Google Play : `psittacidocs_premium_monthly` et
+`psittacidocs_premium_yearly`. Les deux boutiques sont indépendantes : un
+abonnement pris sur Android ne vaut pas sur iPhone ; les données, elles, se
+synchronisent par le compte Psittacidocs. Avant tout abonnement payant, signer
+le contrat « Applications payantes » (App Store Connect → Accords, taxes et
+coordonnées bancaires).
 
 ## Psittacopédie : ajouter des informations
 

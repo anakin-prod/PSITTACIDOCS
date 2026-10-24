@@ -51,6 +51,10 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/images/play_store_icon_512.png"
+  # iPhone : image carrée pleine (1024 px, sans transparence) ; iOS arrondit
+  # lui-même les coins.
+  image_path_ios: "assets/images/icon.png"
+  remove_alpha_ios: true
   # Icône adaptative Android : fond bleu nuit uni + perroquet centré sur fond
   # transparent. Avec une marge de 16 %, l'image du premier plan correspond à
   # la zone visible de l'icône : même composition que l'icône de l'en-tête.

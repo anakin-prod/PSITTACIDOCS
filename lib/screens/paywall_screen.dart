@@ -11,9 +11,9 @@ import '../widgets/common.dart';
 
 /// Présentation de la formule Premium et achat de l'abonnement.
 ///
-/// Les prix affichés viennent de Google Play. Tant que les abonnements ne sont
-/// pas créés dans la Play Console, l'écran explique simplement qu'ils ne sont
-/// pas encore disponibles.
+/// Les prix affichés viennent de la boutique (Google Play ou App Store). Tant
+/// que les abonnements n'y sont pas créés, l'écran explique simplement qu'ils
+/// ne sont pas encore disponibles.
 class PaywallScreen extends StatelessWidget {
   /// Raison pour laquelle l'écran s'ouvre (fonction demandée, limite atteinte…).
   final String? reason;
@@ -26,6 +26,19 @@ class PaywallScreen extends StatelessWidget {
     ('thermo', 'Suivi des volières et de l’incubation'),
     ('pdf', 'Exports PDF : fiches et inventaire'),
   ];
+
+  static const _googleTerms =
+      'Abonnement à renouvellement automatique, facturé sur ton compte Google Play. '
+      'Tu peux le résilier à tout moment dans Google Play (Paiements et abonnements → Abonnements) : '
+      'il reste alors actif jusqu’à la fin de la période déjà payée. '
+      'L’abonnement est lié à ton compte Google Play et se retrouve sur tous tes appareils connectés à ce compte.';
+
+  static const _appleTerms =
+      'Abonnement à renouvellement automatique, facturé sur ton identifiant Apple au moment de la confirmation. '
+      'Il se renouvelle automatiquement, au même prix et pour la même durée, sauf s’il est résilié au moins '
+      '24 heures avant la fin de la période en cours. Tu peux le gérer ou le résilier à tout moment dans '
+      'Réglages → ton nom → Abonnements : il reste alors actif jusqu’à la fin de la période déjà payée. '
+      'L’abonnement est lié à ton identifiant Apple et se retrouve sur tous tes appareils Apple connectés à ce compte.';
 
   String _period(ProductDetails p) => p.id == kSubYearlyId ? 'par an' : 'par mois';
   String _label(ProductDetails p) => p.id == kSubYearlyId ? 'Annuel' : 'Mensuel';
@@ -106,7 +119,7 @@ class PaywallScreen extends StatelessWidget {
               const SectionLabel('Abonnement'),
               if (premium.isPremium)
                 _ActiveCard(onManage: () => launchUrl(
-                  Uri.parse('https://play.google.com/store/account/subscriptions'),
+                  Uri.parse(kManageSubscriptionsUrl),
                   mode: LaunchMode.externalApplication,
                 ))
               else if (premium.loadingProducts)
@@ -121,7 +134,9 @@ class PaywallScreen extends StatelessWidget {
                       Text(
                         premium.storeAvailable
                             ? 'L’abonnement n’est pas encore disponible.'
-                            : 'Google Play est inaccessible pour le moment.',
+                            : (kIsAppleStore
+                                ? 'L’App Store est inaccessible pour le moment.'
+                                : 'Google Play est inaccessible pour le moment.'),
                         style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: AppColors.navy),
                       ),
                       const SizedBox(height: 4),
@@ -174,22 +189,19 @@ class PaywallScreen extends StatelessWidget {
                   ),
                 ),
               const SizedBox(height: 8),
-              const Text(
-                'Abonnement à renouvellement automatique, facturé sur ton compte Google Play. '
-                'Tu peux le résilier à tout moment dans Google Play (Paiements et abonnements → Abonnements) : '
-                'il reste alors actif jusqu’à la fin de la période déjà payée. '
-                'L’abonnement est lié à ton compte Google Play et se retrouve sur tous tes appareils connectés à ce compte.',
-                style: TextStyle(fontSize: 11.5, height: 1.45, color: AppColors.mute),
+              Text(
+                kIsAppleStore ? _appleTerms : _googleTerms,
+                style: const TextStyle(fontSize: 11.5, height: 1.45, color: AppColors.mute),
               ),
               const SizedBox(height: 10),
-              Center(
-                child: GestureDetector(
-                  onTap: () => launchUrl(Uri.parse(kPrivacyPolicyUrl), mode: LaunchMode.externalApplication),
-                  child: const Text(
-                    'Politique de confidentialité',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.bronzeDark),
-                  ),
-                ),
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 18,
+                runSpacing: 6,
+                children: [
+                  _LegalLink('Politique de confidentialité', kPrivacyPolicyUrl),
+                  if (kIsAppleStore) _LegalLink('Conditions d’utilisation (CLUF)', kAppleStandardEulaUrl),
+                ],
               ),
             ]),
           );
@@ -219,6 +231,21 @@ class _ActiveCard extends StatelessWidget {
         const SizedBox(height: 12),
         OutlinedButton(onPressed: onManage, child: const Text('Gérer mon abonnement')),
       ],
+    ),
+  );
+}
+
+class _LegalLink extends StatelessWidget {
+  final String label;
+  final String url;
+  const _LegalLink(this.label, this.url);
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+    onTap: () => launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
+    child: Text(
+      label,
+      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.bronzeDark),
     ),
   );
 }

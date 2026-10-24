@@ -2,6 +2,7 @@
 #
 #   1 · Build de test       → un .apk à installer directement sur un téléphone.
 #   2 · Build Google Play    → un .aab signé avec ta clé, à envoyer sur Google Play.
+#   3 · Build iPhone         → un .ipa signé, envoyé automatiquement sur TestFlight.
 
 #
 # La clé de signature a été générée une fois pour toutes (script conservé dans
@@ -9,7 +10,7 @@
 # « psittacidocs_upload ».
 #
 # Tous utilisent mac_mini_m2 : c'est la seule machine du compte gratuit
-# (500 min/mois), et elle compile très bien Android.
+# (500 min/mois), et elle compile Android comme iPhone.
 
 workflows:
   test-build:
@@ -90,3 +91,44 @@ workflows:
     #   google_play:
     #     credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
     #     track: internal
+
+  ios-release:
+    name: 3 · Build iPhone (TestFlight)
+    instance_type: mac_mini_m2
+    max_build_duration: 90
+    # Clé d'API App Store Connect enregistrée dans Codemagic sous ce nom
+    # (Integrations → Developer Portal → Manage keys). Elle sert à signer l'appli
+    # et à l'envoyer sur TestFlight.
+    integrations:
+      app_store_connect: Psittacidocs
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      # Codemagic choisit tout seul le certificat « Apple Distribution » et le
+      # profil App Store de app.psittacidocs enregistrés dans Code signing
+      # identities (voir README.md, partie iPhone).
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: app.psittacidocs
+    scripts:
+      - name: Préparer le projet
+        script: bash scripts/prepare_ios.sh
+      - name: Appliquer la signature au projet Xcode
+        script: xcode-project use-profiles
+      - name: Compiler l'IPA signée
+        script: |
+          # Le numéro de build augmente à chaque build : App Store Connect
+          # refuse deux envois avec le même numéro pour une même version.
+          flutter build ipa --release \
+            --build-number=$BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        # L'appli arrive dans TestFlight (onglet TestFlight d'App Store Connect)
+        # après le traitement d'Apple, en général 10 à 30 minutes.
+        submit_to_testflight: true

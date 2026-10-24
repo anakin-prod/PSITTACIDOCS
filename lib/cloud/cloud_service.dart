@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -128,6 +129,19 @@ class CloudService extends ChangeNotifier {
 
   /// Vrai si le compte a été créé avec Google.
   bool get isGoogleAccount => user?.providerData.any((p) => p.providerId == 'google.com') ?? false;
+
+  /// Vrai si le compte a été créé avec « Se connecter avec Apple ».
+  bool get isAppleAccount => user?.providerData.any((p) => p.providerId == 'apple.com') ?? false;
+
+  /// « Se connecter avec Apple » n'est proposé que sur iPhone, où il est natif.
+  bool get appleSignInSupported => available && Platform.isIOS;
+
+  /// Libellé de la méthode de connexion du compte, pour l'écran Compte.
+  String get providerLabel {
+    if (isAppleAccount) return 'Compte Apple';
+    if (isGoogleAccount) return 'Compte Google';
+    return 'E-mail et mot de passe';
+  }
 
   /// Vrai si le compte utilise un mot de passe.
   bool get isPasswordAccount => user?.providerData.any((p) => p.providerId == 'password') ?? false;
@@ -488,6 +502,35 @@ class CloudService extends ChangeNotifier {
     }
   }
 
+  /// Connexion avec Apple (iPhone uniquement), via la fenêtre native d'Apple.
+  /// L'utilisateur peut choisir de masquer son adresse e-mail : Apple fournit
+  /// alors une adresse relais, qui suffit pour le compte.
+  Future<String?> signInWithApple() async {
+    if (!available) return _unavailableMessage;
+    try {
+      final provider = AppleAuthProvider()
+        ..addScope('email')
+        ..addScope('name');
+      await FirebaseAuth.instance.signInWithProvider(provider);
+      user = FirebaseAuth.instance.currentUser;
+      notifyListeners();
+      return null;
+    } on FirebaseAuthException catch (e) {
+      if (_isAppleCancel(e)) return null;
+      return _authMessage(e);
+    } catch (e) {
+      return 'Erreur : $e';
+    }
+  }
+
+  /// La fenêtre Apple fermée par l'utilisateur remonte parfois sous un code
+  /// générique : on la reconnaît aussi au code d'erreur Apple 1001.
+  bool _isAppleCancel(FirebaseAuthException e) {
+    final code = e.code.toLowerCase();
+    final msg = (e.message ?? '').toLowerCase();
+    return code.contains('cancel') || msg.contains('1001') || msg.contains('canceled') || msg.contains('cancelled');
+  }
+
   Future<String?> sendPasswordReset(String email) async {
     if (!available) return _unavailableMessage;
     try {
@@ -564,6 +607,7 @@ class CloudService extends ChangeNotifier {
   Future<String?> deleteAccount({String? password}) async {
     final u = user;
     if (!available || u == null) return 'Aucun compte connecté.';
+    String? appleAuthCode;
     try {
       // 1. Confirmation récente de l'identité (exigée par Firebase pour supprimer).
       if (isPasswordAccount) {
@@ -578,6 +622,18 @@ class CloudService extends ChangeNotifier {
         final idToken = googleUser.authentication.idToken;
         if (idToken == null) return 'Reconnexion Google incomplète. Réessaie dans un instant.';
         await u.reauthenticateWithCredential(GoogleAuthProvider.credential(idToken: idToken));
+      } else if (isAppleAccount) {
+        if (!Platform.isIOS) {
+          return 'Ce compte a été créé avec Apple : supprime-le depuis l’appli sur iPhone, '
+              'ou écris-nous à $kContactEmail.';
+        }
+        try {
+          final cred = await u.reauthenticateWithProvider(AppleAuthProvider());
+          appleAuthCode = cred.additionalUserInfo?.authorizationCode;
+        } on FirebaseAuthException catch (e) {
+          if (_isAppleCancel(e)) return 'Suppression annulée.';
+          rethrow;
+        }
       }
 
       // 2. Suppression des données en ligne.
@@ -590,7 +646,17 @@ class CloudService extends ChangeNotifier {
       }
       await batch.commit().timeout(_netTimeout);
 
-      // 3. Suppression du compte lui-même.
+      // 3. Compte Apple : révocation de l'autorisation donnée à Psittacidocs,
+      //    comme Apple l'exige. Un échec ici n'empêche pas la suppression.
+      if (appleAuthCode != null) {
+        try {
+          await FirebaseAuth.instance.revokeTokenWithAuthorizationCode(appleAuthCode).timeout(_netTimeout);
+        } catch (e) {
+          debugPrint('Révocation Apple impossible : $e');
+        }
+      }
+
+      // 4. Suppression du compte lui-même.
       await u.delete();
 
       // Les données locales sont conservées : elles seront proposées à un futur compte.
