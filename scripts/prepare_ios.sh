@@ -6,7 +6,7 @@ echo "1/5 · Génération du dossier ios/"
 # Comme pour Android, ce dossier n'est pas versionné : il est recréé avec la
 # version de Flutter de la machine de build. lib/, assets/ et pubspec.yaml ne
 # sont pas touchés.
-flutter create . --platforms=ios --org app --project-name psittacidocs
+flutter create . --platforms=android,ios --org app --project-name psittacidocs
 
 echo "2/5 · Installation des dépendances"
 flutter pub get
