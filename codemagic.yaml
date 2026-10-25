@@ -100,7 +100,7 @@ workflows:
     # (Integrations → Developer Portal → Manage keys). Elle sert à signer l'appli
     # et à l'envoyer sur TestFlight.
     integrations:
-      app_store_connect: Psittacidocs
+      app_store_connect: tyto_apple
     environment:
       flutter: stable
       xcode: latest
