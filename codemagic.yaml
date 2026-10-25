@@ -131,4 +131,4 @@ workflows:
         auth: integration
         # L'appli arrive dans TestFlight (onglet TestFlight d'App Store Connect)
         # après le traitement d'Apple, en général 10 à 30 minutes.
-        submit_to_testflight: true
+        submit_to_testflight: false
