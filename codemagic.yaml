@@ -96,7 +96,8 @@ workflows:
     name: 3 · Build iPhone (TestFlight)
     instance_type: mac_mini_m2
     max_build_duration: 90
-    # Clé d'API App Store Connect enregistrée dans Codemagic sous ce nom
+    # Clé d'API App Store Connect (commune à toutes les applis du compte Apple)
+    # enregistrée dans Codemagic sous ce nom
     # (Integrations → Developer Portal → Manage keys). Elle sert à signer l'appli
     # et à l'envoyer sur TestFlight.
     integrations:
@@ -130,5 +131,8 @@ workflows:
       app_store_connect:
         auth: integration
         # L'appli arrive dans TestFlight (onglet TestFlight d'App Store Connect)
-        # après le traitement d'Apple, en général 10 à 30 minutes.
+        # après le traitement d'Apple, en général 10 à 30 minutes, et devient
+        # installable par le groupe de test interne. Passer à true seulement
+        # pour l'envoyer aussi aux testeurs externes (vérification bêta d'Apple,
+        # qui demande les informations de test remplies dans TestFlight).
         submit_to_testflight: false

@@ -84,8 +84,8 @@ Préparation, une seule fois :
 3. **App Store Connect → Utilisateurs et accès → Intégrations → API App Store
    Connect** : créer une clé (accès « App Manager »), télécharger le `.p8`,
    noter l'Issuer ID et le Key ID.
-4. **Codemagic → Integrations → Developer Portal → Manage keys** : ajouter
-   cette clé sous le nom exact `Psittacidocs`.
+4. **Codemagic → Integrations → Developer Portal → Manage keys** : utiliser
+   la clé du compte Apple, nommée `tyto_apple` (commune à toutes les applis).
 5. **Codemagic → codemagic.yaml settings → Code signing identities** :
    - *iOS certificates* → **Generate certificate** → type *Apple Distribution*
      (télécharger et garder le fichier proposé) ;
@@ -103,6 +103,15 @@ abonnement pris sur Android ne vaut pas sur iPhone ; les données, elles, se
 synchronisent par le compte Psittacidocs. Avant tout abonnement payant, signer
 le contrat « Applications payantes » (App Store Connect → Accords, taxes et
 coordonnées bancaires).
+
+### Premium et pages web
+
+- Le verrouillage Premium se règle par boutique dans `lib/config/app_config.dart` :
+  `kPremiumEnforcedIos = true` (App Store) et `kPremiumEnforcedAndroid = false`
+  (à passer à `true` au lancement sur Google Play).
+- Pages publiées par GitHub Pages : politique de confidentialité
+  (`docs/privacy-policy/`) et assistance (`docs/support/`, URL d'assistance de
+  l'App Store : https://anakin-prod.github.io/PSITTACIDOCS/support/).
 
 ## Psittacopédie : ajouter des informations
 
