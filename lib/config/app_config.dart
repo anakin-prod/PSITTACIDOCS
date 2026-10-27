@@ -22,13 +22,22 @@ const String kGoogleServerClientId =
 // Formule Premium
 // ---------------------------------------------------------------------------
 
-/// Tant que ce réglage est à `false`, TOUTES les fonctions sont accessibles à
-/// tout le monde, abonné ou non : c'est le mode à utiliser pendant les tests,
-/// puisque l'abonnement ne peut pas être acheté avant que les produits soient
-/// créés dans la Play Console.
+/// Verrouillage Premium, réglé séparément pour chaque boutique.
 ///
-/// Le jour du lancement public, il suffit de passer ce réglage à `true`.
-const bool kPremiumEnforced = false;
+/// À `false`, TOUTES les fonctions sont accessibles à tout le monde, abonné ou
+/// non : c'est le mode des tests, tant que l'abonnement n'est pas en vente.
+/// À `true`, la formule gratuite est limitée et Premium s'achète dans la
+/// boutique de l'appareil.
+///
+/// iPhone : activé pour la publication sur l'App Store (abonnements créés dans
+/// App Store Connect).
+/// Android : désactivé pendant le test fermé ; à passer à `true` le jour du
+/// lancement sur Google Play, une fois les abonnements créés dans la Play Console.
+const bool kPremiumEnforcedIos = true;
+const bool kPremiumEnforcedAndroid = false;
+
+/// Verrouillage en vigueur sur cet appareil.
+bool get kPremiumEnforced => Platform.isIOS ? kPremiumEnforcedIos : kPremiumEnforcedAndroid;
 
 /// Nombre d'oiseaux présents autorisés avec la formule gratuite.
 const int kFreeBirdLimit = 25;

@@ -5,7 +5,8 @@ set -euo pipefail
 echo "1/5 · Génération du dossier ios/"
 # Comme pour Android, ce dossier n'est pas versionné : il est recréé avec la
 # version de Flutter de la machine de build. lib/, assets/ et pubspec.yaml ne
-# sont pas touchés.
+# sont pas touchés. Le dossier android/ est créé aussi, sans être compilé :
+# les outils d'icônes et d'écran de démarrage en ont besoin.
 flutter create . --platforms=android,ios --org app --project-name psittacidocs
 
 echo "2/5 · Installation des dépendances"
